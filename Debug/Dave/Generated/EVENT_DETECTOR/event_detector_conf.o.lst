@@ -1,0 +1,50 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .fpu fpv4-sp-d16
+   5              	 .eabi_attribute 20,1
+   6              	 .eabi_attribute 21,1
+   7              	 .eabi_attribute 23,3
+   8              	 .eabi_attribute 24,1
+   9              	 .eabi_attribute 25,1
+  10              	 .eabi_attribute 26,1
+  11              	 .eabi_attribute 30,6
+  12              	 .eabi_attribute 34,1
+  13              	 .eabi_attribute 18,4
+  14              	 .thumb
+  15              	 .file "event_detector_conf.c"
+  16              	 .text
+  17              	.Ltext0:
+  18              	 .cfi_sections .debug_frame
+  19              	 .global EVENT_DETECTOR_0_ETL_Config
+  20              	 .section .rodata.EVENT_DETECTOR_0_ETL_Config,"a",%progbits
+  21              	 .align 2
+  24              	EVENT_DETECTOR_0_ETL_Config:
+  25 0000 00000000 	 .space 8
+  25      00000000 
+  26              	 .global EVENT_DETECTOR_0
+  27              	 .section .data.EVENT_DETECTOR_0,"aw",%progbits
+  28              	 .align 2
+  31              	EVENT_DETECTOR_0:
+  32 0000 00400440 	 .word 1074020352
+  33 0004 01       	 .byte 1
+  34 0005 000000   	 .space 3
+  35 0008 00000000 	 .word EVENT_DETECTOR_0_ETL_Config
+  36 000c 00       	 .byte 0
+  37 000d 000000   	 .space 3
+  38              	 .text
+  39              	.Letext0:
+  40              	 .file 1 "d:\\dave-4.1.2\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+  41              	 .file 2 "d:\\dave-4.1.2\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+  42              	 .file 3 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex\\Libraries\\XMCLib\\inc/xmc_eru.h"
+  43              	 .file 4 "../Dave/Generated/EVENT_DETECTOR/event_detector.h"
+  44              	 .file 5 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex/Libraries/CMSIS/Include/core_cm4.h"
+  45              	 .file 6 "../Dave/Generated/EVENT_DETECTOR/event_detector_conf.c"
+DEFINED SYMBOLS
+                            *ABS*:00000000 event_detector_conf.c
+    {standard input}:24     .rodata.EVENT_DETECTOR_0_ETL_Config:00000000 EVENT_DETECTOR_0_ETL_Config
+    {standard input}:21     .rodata.EVENT_DETECTOR_0_ETL_Config:00000000 $d
+    {standard input}:31     .data.EVENT_DETECTOR_0:00000000 EVENT_DETECTOR_0
+    {standard input}:28     .data.EVENT_DETECTOR_0:00000000 $d
+
+NO UNDEFINED SYMBOLS

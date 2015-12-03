@@ -1,0 +1,2142 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .fpu fpv4-sp-d16
+   5              	 .eabi_attribute 20,1
+   6              	 .eabi_attribute 21,1
+   7              	 .eabi_attribute 23,3
+   8              	 .eabi_attribute 24,1
+   9              	 .eabi_attribute 25,1
+  10              	 .eabi_attribute 26,1
+  11              	 .eabi_attribute 30,6
+  12              	 .eabi_attribute 34,1
+  13              	 .eabi_attribute 18,4
+  14              	 .thumb
+  15              	 .file "xmc4_flash.c"
+  16              	 .text
+  17              	.Ltext0:
+  18              	 .cfi_sections .debug_frame
+  19              	 .section .text.XMC_FLASH_lEnterPageModeCommand,"ax",%progbits
+  20              	 .align 2
+  21              	 .global XMC_FLASH_lEnterPageModeCommand
+  22              	 .thumb
+  23              	 .thumb_func
+  25              	XMC_FLASH_lEnterPageModeCommand:
+  26              	.LFB142:
+  27              	 .file 1 "../Libraries/XMCLib/src/xmc4_flash.c"
+   1:../Libraries/XMCLib/src/xmc4_flash.c **** /**
+   2:../Libraries/XMCLib/src/xmc4_flash.c ****  * @file xmc4_flash.c
+   3:../Libraries/XMCLib/src/xmc4_flash.c ****  * @date 2015-10-27
+   4:../Libraries/XMCLib/src/xmc4_flash.c ****  *
+   5:../Libraries/XMCLib/src/xmc4_flash.c ****  * @cond
+   6:../Libraries/XMCLib/src/xmc4_flash.c ****  **************************************************************************************************
+   7:../Libraries/XMCLib/src/xmc4_flash.c ****  * XMClib v2.1.2 - XMC Peripheral Driver Library 
+   8:../Libraries/XMCLib/src/xmc4_flash.c ****  *
+   9:../Libraries/XMCLib/src/xmc4_flash.c ****  * Copyright (c) 2015, Infineon Technologies AG
+  10:../Libraries/XMCLib/src/xmc4_flash.c ****  * All rights reserved.                        
+  11:../Libraries/XMCLib/src/xmc4_flash.c ****  *                                             
+  12:../Libraries/XMCLib/src/xmc4_flash.c ****  * Redistribution and use in source and binary forms, with or without modification,are permitted pr
+  13:../Libraries/XMCLib/src/xmc4_flash.c ****  * following conditions are met:   
+  14:../Libraries/XMCLib/src/xmc4_flash.c ****  *                                                                              
+  15:../Libraries/XMCLib/src/xmc4_flash.c ****  * Redistributions of source code must retain the above copyright notice, this list of conditions a
+  16:../Libraries/XMCLib/src/xmc4_flash.c ****  * disclaimer.                        
+  17:../Libraries/XMCLib/src/xmc4_flash.c ****  * 
+  18:../Libraries/XMCLib/src/xmc4_flash.c ****  * Redistributions in binary form must reproduce the above copyright notice, this list of condition
+  19:../Libraries/XMCLib/src/xmc4_flash.c ****  * disclaimer in the documentation and/or other materials provided with the distribution.          
+  20:../Libraries/XMCLib/src/xmc4_flash.c ****  * 
+  21:../Libraries/XMCLib/src/xmc4_flash.c ****  * Neither the name of the copyright holders nor the names of its contributors may be used to endor
+  22:../Libraries/XMCLib/src/xmc4_flash.c ****  * products derived from this software without specific prior written permission.                  
+  23:../Libraries/XMCLib/src/xmc4_flash.c ****  *                                                                              
+  24:../Libraries/XMCLib/src/xmc4_flash.c ****  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR I
+  25:../Libraries/XMCLib/src/xmc4_flash.c ****  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTI
+  26:../Libraries/XMCLib/src/xmc4_flash.c ****  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE  FOR ANY DIRECT, IN
+  27:../Libraries/XMCLib/src/xmc4_flash.c ****  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBS
+  28:../Libraries/XMCLib/src/xmc4_flash.c ****  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THE
+  29:../Libraries/XMCLib/src/xmc4_flash.c ****  * WHETHER IN CONTRACT, STRICT LIABILITY,OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+  30:../Libraries/XMCLib/src/xmc4_flash.c ****  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                            
+  31:../Libraries/XMCLib/src/xmc4_flash.c ****  *                                                                              
+  32:../Libraries/XMCLib/src/xmc4_flash.c ****  * To improve the quality of the software, users are encouraged to share modifications, enhancement
+  33:../Libraries/XMCLib/src/xmc4_flash.c ****  * Infineon Technologies AG dave@infineon.com).                                                    
+  34:../Libraries/XMCLib/src/xmc4_flash.c ****  **************************************************************************************************
+  35:../Libraries/XMCLib/src/xmc4_flash.c ****  *
+  36:../Libraries/XMCLib/src/xmc4_flash.c ****  * Change History
+  37:../Libraries/XMCLib/src/xmc4_flash.c ****  * --------------
+  38:../Libraries/XMCLib/src/xmc4_flash.c ****  *
+  39:../Libraries/XMCLib/src/xmc4_flash.c ****  * 2015-02-10:
+  40:../Libraries/XMCLib/src/xmc4_flash.c ****  *     - Initial <br>
+  41:../Libraries/XMCLib/src/xmc4_flash.c ****  *
+  42:../Libraries/XMCLib/src/xmc4_flash.c ****  * 2015-06-20: 
+  43:../Libraries/XMCLib/src/xmc4_flash.c ****  *     - Removed definition of GetDriverVersion API 
+  44:../Libraries/XMCLib/src/xmc4_flash.c ****  *
+  45:../Libraries/XMCLib/src/xmc4_flash.c ****  * 2015-08-17: 
+  46:../Libraries/XMCLib/src/xmc4_flash.c ****  *     - Added the below API's to the public interface.
+  47:../Libraries/XMCLib/src/xmc4_flash.c ****  *       1. XMC_FLASH_Reset
+  48:../Libraries/XMCLib/src/xmc4_flash.c ****  *       2. XMC_FLASH_ErasePhysicalSector
+  49:../Libraries/XMCLib/src/xmc4_flash.c ****  *       3. XMC_FLASH_EraseUCB
+  50:../Libraries/XMCLib/src/xmc4_flash.c ****  *       4. XMC_FLASH_ResumeProtection
+  51:../Libraries/XMCLib/src/xmc4_flash.c ****  *       5. XMC_FLASH_RepairPhysicalSector
+  52:../Libraries/XMCLib/src/xmc4_flash.c ****  * @endcond 
+  53:../Libraries/XMCLib/src/xmc4_flash.c ****  *
+  54:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+  55:../Libraries/XMCLib/src/xmc4_flash.c **** 
+  56:../Libraries/XMCLib/src/xmc4_flash.c **** #include "xmc_flash.h"
+  57:../Libraries/XMCLib/src/xmc4_flash.c **** 
+  58:../Libraries/XMCLib/src/xmc4_flash.c **** #if UC_FAMILY == XMC4
+  59:../Libraries/XMCLib/src/xmc4_flash.c **** 
+  60:../Libraries/XMCLib/src/xmc4_flash.c **** /**************************************************************************************************
+  61:../Libraries/XMCLib/src/xmc4_flash.c ****  * MACROS
+  62:../Libraries/XMCLib/src/xmc4_flash.c ****  **************************************************************************************************
+  63:../Libraries/XMCLib/src/xmc4_flash.c **** 
+  64:../Libraries/XMCLib/src/xmc4_flash.c **** #define XMC_FLASH_PROTECTION_CONFIGURATION_WORDS (8UL) /* Used to upadte the assembly buffer during
+  65:../Libraries/XMCLib/src/xmc4_flash.c ****                                                           configuration */
+  66:../Libraries/XMCLib/src/xmc4_flash.c **** #define XMC_FLASH_PROTECTION_CONFIRMATION_OFFSET (512UL) /* Offset address for UCB page */
+  67:../Libraries/XMCLib/src/xmc4_flash.c **** #define XMC_FLASH_PROTECTION_CONFIRMATION_WORDS  (4UL)
+  68:../Libraries/XMCLib/src/xmc4_flash.c **** #define XMC_FLASH_PROTECTION_CONFIRMATION_CODE   (0x8AFE15C3UL)
+  69:../Libraries/XMCLib/src/xmc4_flash.c **** 
+  70:../Libraries/XMCLib/src/xmc4_flash.c **** /**************************************************************************************************
+  71:../Libraries/XMCLib/src/xmc4_flash.c ****  * LOCAL FUNCTIONS
+  72:../Libraries/XMCLib/src/xmc4_flash.c ****  **************************************************************************************************
+  73:../Libraries/XMCLib/src/xmc4_flash.c **** 
+  74:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+  75:../Libraries/XMCLib/src/xmc4_flash.c ****  * Command to program the PFLASH in to page mode, so that assembly buffer is used 
+  76:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+  77:../Libraries/XMCLib/src/xmc4_flash.c **** void XMC_FLASH_lEnterPageModeCommand(void)
+  78:../Libraries/XMCLib/src/xmc4_flash.c **** {
+  28              	 .loc 1 78 0
+  29              	 .cfi_startproc
+  30              	 
+  31              	 
+  32              	 
+  33 0000 80B4     	 push {r7}
+  34              	.LCFI0:
+  35              	 .cfi_def_cfa_offset 4
+  36              	 .cfi_offset 7,-4
+  37 0002 83B0     	 sub sp,sp,#12
+  38              	.LCFI1:
+  39              	 .cfi_def_cfa_offset 16
+  40 0004 00AF     	 add r7,sp,#0
+  41              	.LCFI2:
+  42              	 .cfi_def_cfa_register 7
+  79:../Libraries/XMCLib/src/xmc4_flash.c ****   volatile uint32_t *address;
+  80:../Libraries/XMCLib/src/xmc4_flash.c **** 
+  81:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5554U);
+  43              	 .loc 1 81 0
+  44 0006 054B     	 ldr r3,.L2
+  45 0008 7B60     	 str r3,[r7,#4]
+  82:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x50;
+  46              	 .loc 1 82 0
+  47 000a 7B68     	 ldr r3,[r7,#4]
+  48 000c 5022     	 movs r2,#80
+  49 000e 1A60     	 str r2,[r3]
+  83:../Libraries/XMCLib/src/xmc4_flash.c **** }
+  50              	 .loc 1 83 0
+  51 0010 0C37     	 adds r7,r7,#12
+  52              	.LCFI3:
+  53              	 .cfi_def_cfa_offset 4
+  54 0012 BD46     	 mov sp,r7
+  55              	.LCFI4:
+  56              	 .cfi_def_cfa_register 13
+  57              	 
+  58 0014 5DF8047B 	 ldr r7,[sp],#4
+  59              	.LCFI5:
+  60              	 .cfi_restore 7
+  61              	 .cfi_def_cfa_offset 0
+  62 0018 7047     	 bx lr
+  63              	.L3:
+  64 001a 00BF     	 .align 2
+  65              	.L2:
+  66 001c 5455000C 	 .word 201348436
+  67              	 .cfi_endproc
+  68              	.LFE142:
+  70              	 .section .text.XMC_FLASH_lLoadPageCommand,"ax",%progbits
+  71              	 .align 2
+  72              	 .global XMC_FLASH_lLoadPageCommand
+  73              	 .thumb
+  74              	 .thumb_func
+  76              	XMC_FLASH_lLoadPageCommand:
+  77              	.LFB143:
+  84:../Libraries/XMCLib/src/xmc4_flash.c **** 
+  85:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+  86:../Libraries/XMCLib/src/xmc4_flash.c ****  * Command to load the data into the page assembly buffer 
+  87:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+  88:../Libraries/XMCLib/src/xmc4_flash.c **** void XMC_FLASH_lLoadPageCommand(uint32_t low_word, uint32_t high_word)
+  89:../Libraries/XMCLib/src/xmc4_flash.c **** {
+  78              	 .loc 1 89 0
+  79              	 .cfi_startproc
+  80              	 
+  81              	 
+  82              	 
+  83 0000 80B4     	 push {r7}
+  84              	.LCFI6:
+  85              	 .cfi_def_cfa_offset 4
+  86              	 .cfi_offset 7,-4
+  87 0002 85B0     	 sub sp,sp,#20
+  88              	.LCFI7:
+  89              	 .cfi_def_cfa_offset 24
+  90 0004 00AF     	 add r7,sp,#0
+  91              	.LCFI8:
+  92              	 .cfi_def_cfa_register 7
+  93 0006 7860     	 str r0,[r7,#4]
+  94 0008 3960     	 str r1,[r7]
+  90:../Libraries/XMCLib/src/xmc4_flash.c ****   volatile uint32_t *address;
+  91:../Libraries/XMCLib/src/xmc4_flash.c **** 
+  92:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x55f0U);
+  95              	 .loc 1 92 0
+  96 000a 074B     	 ldr r3,.L5
+  97 000c FB60     	 str r3,[r7,#12]
+  93:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = low_word;
+  98              	 .loc 1 93 0
+  99 000e FB68     	 ldr r3,[r7,#12]
+ 100 0010 7A68     	 ldr r2,[r7,#4]
+ 101 0012 1A60     	 str r2,[r3]
+  94:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x55f4U);
+ 102              	 .loc 1 94 0
+ 103 0014 054B     	 ldr r3,.L5+4
+ 104 0016 FB60     	 str r3,[r7,#12]
+  95:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = high_word;
+ 105              	 .loc 1 95 0
+ 106 0018 FB68     	 ldr r3,[r7,#12]
+ 107 001a 3A68     	 ldr r2,[r7]
+ 108 001c 1A60     	 str r2,[r3]
+  96:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 109              	 .loc 1 96 0
+ 110 001e 1437     	 adds r7,r7,#20
+ 111              	.LCFI9:
+ 112              	 .cfi_def_cfa_offset 4
+ 113 0020 BD46     	 mov sp,r7
+ 114              	.LCFI10:
+ 115              	 .cfi_def_cfa_register 13
+ 116              	 
+ 117 0022 5DF8047B 	 ldr r7,[sp],#4
+ 118              	.LCFI11:
+ 119              	 .cfi_restore 7
+ 120              	 .cfi_def_cfa_offset 0
+ 121 0026 7047     	 bx lr
+ 122              	.L6:
+ 123              	 .align 2
+ 124              	.L5:
+ 125 0028 F055000C 	 .word 201348592
+ 126 002c F455000C 	 .word 201348596
+ 127              	 .cfi_endproc
+ 128              	.LFE143:
+ 130              	 .section .text.XMC_FLASH_lWritePageCommand,"ax",%progbits
+ 131              	 .align 2
+ 132              	 .global XMC_FLASH_lWritePageCommand
+ 133              	 .thumb
+ 134              	 .thumb_func
+ 136              	XMC_FLASH_lWritePageCommand:
+ 137              	.LFB144:
+  97:../Libraries/XMCLib/src/xmc4_flash.c **** 
+  98:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+  99:../Libraries/XMCLib/src/xmc4_flash.c ****  * Command to start the programming of one page with data from the assembly buffer
+ 100:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+ 101:../Libraries/XMCLib/src/xmc4_flash.c **** void XMC_FLASH_lWritePageCommand(uint32_t *page_start_address)
+ 102:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 138              	 .loc 1 102 0
+ 139              	 .cfi_startproc
+ 140              	 
+ 141              	 
+ 142              	 
+ 143 0000 80B4     	 push {r7}
+ 144              	.LCFI12:
+ 145              	 .cfi_def_cfa_offset 4
+ 146              	 .cfi_offset 7,-4
+ 147 0002 85B0     	 sub sp,sp,#20
+ 148              	.LCFI13:
+ 149              	 .cfi_def_cfa_offset 24
+ 150 0004 00AF     	 add r7,sp,#0
+ 151              	.LCFI14:
+ 152              	 .cfi_def_cfa_register 7
+ 153 0006 7860     	 str r0,[r7,#4]
+ 103:../Libraries/XMCLib/src/xmc4_flash.c ****   volatile uint32_t *address;
+ 104:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 105:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5554U);
+ 154              	 .loc 1 105 0
+ 155 0008 0C4B     	 ldr r3,.L8
+ 156 000a FB60     	 str r3,[r7,#12]
+ 106:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0xaaU;
+ 157              	 .loc 1 106 0
+ 158 000c FB68     	 ldr r3,[r7,#12]
+ 159 000e AA22     	 movs r2,#170
+ 160 0010 1A60     	 str r2,[r3]
+ 107:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0xaaa8U);
+ 161              	 .loc 1 107 0
+ 162 0012 0B4B     	 ldr r3,.L8+4
+ 163 0014 FB60     	 str r3,[r7,#12]
+ 108:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x55U;
+ 164              	 .loc 1 108 0
+ 165 0016 FB68     	 ldr r3,[r7,#12]
+ 166 0018 5522     	 movs r2,#85
+ 167 001a 1A60     	 str r2,[r3]
+ 109:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5554U);
+ 168              	 .loc 1 109 0
+ 169 001c 074B     	 ldr r3,.L8
+ 170 001e FB60     	 str r3,[r7,#12]
+ 110:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0xa0U;
+ 171              	 .loc 1 110 0
+ 172 0020 FB68     	 ldr r3,[r7,#12]
+ 173 0022 A022     	 movs r2,#160
+ 174 0024 1A60     	 str r2,[r3]
+ 111:../Libraries/XMCLib/src/xmc4_flash.c ****   address = page_start_address;
+ 175              	 .loc 1 111 0
+ 176 0026 7B68     	 ldr r3,[r7,#4]
+ 177 0028 FB60     	 str r3,[r7,#12]
+ 112:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0xaaU;
+ 178              	 .loc 1 112 0
+ 179 002a FB68     	 ldr r3,[r7,#12]
+ 180 002c AA22     	 movs r2,#170
+ 181 002e 1A60     	 str r2,[r3]
+ 113:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 182              	 .loc 1 113 0
+ 183 0030 1437     	 adds r7,r7,#20
+ 184              	.LCFI15:
+ 185              	 .cfi_def_cfa_offset 4
+ 186 0032 BD46     	 mov sp,r7
+ 187              	.LCFI16:
+ 188              	 .cfi_def_cfa_register 13
+ 189              	 
+ 190 0034 5DF8047B 	 ldr r7,[sp],#4
+ 191              	.LCFI17:
+ 192              	 .cfi_restore 7
+ 193              	 .cfi_def_cfa_offset 0
+ 194 0038 7047     	 bx lr
+ 195              	.L9:
+ 196 003a 00BF     	 .align 2
+ 197              	.L8:
+ 198 003c 5455000C 	 .word 201348436
+ 199 0040 A8AA000C 	 .word 201370280
+ 200              	 .cfi_endproc
+ 201              	.LFE144:
+ 203              	 .section .text.XMC_FLASH_lWriteUCBPageCommand,"ax",%progbits
+ 204              	 .align 2
+ 205              	 .global XMC_FLASH_lWriteUCBPageCommand
+ 206              	 .thumb
+ 207              	 .thumb_func
+ 209              	XMC_FLASH_lWriteUCBPageCommand:
+ 210              	.LFB145:
+ 114:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 115:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+ 116:../Libraries/XMCLib/src/xmc4_flash.c ****  * Command to start the programming of UCB page with data from the assembly buffer
+ 117:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+ 118:../Libraries/XMCLib/src/xmc4_flash.c **** void XMC_FLASH_lWriteUCBPageCommand(uint32_t *page_start_address)
+ 119:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 211              	 .loc 1 119 0
+ 212              	 .cfi_startproc
+ 213              	 
+ 214              	 
+ 215              	 
+ 216 0000 80B4     	 push {r7}
+ 217              	.LCFI18:
+ 218              	 .cfi_def_cfa_offset 4
+ 219              	 .cfi_offset 7,-4
+ 220 0002 85B0     	 sub sp,sp,#20
+ 221              	.LCFI19:
+ 222              	 .cfi_def_cfa_offset 24
+ 223 0004 00AF     	 add r7,sp,#0
+ 224              	.LCFI20:
+ 225              	 .cfi_def_cfa_register 7
+ 226 0006 7860     	 str r0,[r7,#4]
+ 120:../Libraries/XMCLib/src/xmc4_flash.c ****   volatile uint32_t *address;
+ 121:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 122:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5554U);
+ 227              	 .loc 1 122 0
+ 228 0008 0C4B     	 ldr r3,.L11
+ 229 000a FB60     	 str r3,[r7,#12]
+ 123:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0xaaU;
+ 230              	 .loc 1 123 0
+ 231 000c FB68     	 ldr r3,[r7,#12]
+ 232 000e AA22     	 movs r2,#170
+ 233 0010 1A60     	 str r2,[r3]
+ 124:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0xaaa8U);
+ 234              	 .loc 1 124 0
+ 235 0012 0B4B     	 ldr r3,.L11+4
+ 236 0014 FB60     	 str r3,[r7,#12]
+ 125:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x55U;
+ 237              	 .loc 1 125 0
+ 238 0016 FB68     	 ldr r3,[r7,#12]
+ 239 0018 5522     	 movs r2,#85
+ 240 001a 1A60     	 str r2,[r3]
+ 126:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5554U);
+ 241              	 .loc 1 126 0
+ 242 001c 074B     	 ldr r3,.L11
+ 243 001e FB60     	 str r3,[r7,#12]
+ 127:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0xc0U;
+ 244              	 .loc 1 127 0
+ 245 0020 FB68     	 ldr r3,[r7,#12]
+ 246 0022 C022     	 movs r2,#192
+ 247 0024 1A60     	 str r2,[r3]
+ 128:../Libraries/XMCLib/src/xmc4_flash.c ****   address = page_start_address;
+ 248              	 .loc 1 128 0
+ 249 0026 7B68     	 ldr r3,[r7,#4]
+ 250 0028 FB60     	 str r3,[r7,#12]
+ 129:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0xaaU;
+ 251              	 .loc 1 129 0
+ 252 002a FB68     	 ldr r3,[r7,#12]
+ 253 002c AA22     	 movs r2,#170
+ 254 002e 1A60     	 str r2,[r3]
+ 130:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 255              	 .loc 1 130 0
+ 256 0030 1437     	 adds r7,r7,#20
+ 257              	.LCFI21:
+ 258              	 .cfi_def_cfa_offset 4
+ 259 0032 BD46     	 mov sp,r7
+ 260              	.LCFI22:
+ 261              	 .cfi_def_cfa_register 13
+ 262              	 
+ 263 0034 5DF8047B 	 ldr r7,[sp],#4
+ 264              	.LCFI23:
+ 265              	 .cfi_restore 7
+ 266              	 .cfi_def_cfa_offset 0
+ 267 0038 7047     	 bx lr
+ 268              	.L12:
+ 269 003a 00BF     	 .align 2
+ 270              	.L11:
+ 271 003c 5455000C 	 .word 201348436
+ 272 0040 A8AA000C 	 .word 201370280
+ 273              	 .cfi_endproc
+ 274              	.LFE145:
+ 276              	 .section .text.XMC_FLASH_lEraseSectorCommand,"ax",%progbits
+ 277              	 .align 2
+ 278              	 .global XMC_FLASH_lEraseSectorCommand
+ 279              	 .thumb
+ 280              	 .thumb_func
+ 282              	XMC_FLASH_lEraseSectorCommand:
+ 283              	.LFB146:
+ 131:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 132:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+ 133:../Libraries/XMCLib/src/xmc4_flash.c ****  * Command to erase sector which is starting with the specified address
+ 134:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+ 135:../Libraries/XMCLib/src/xmc4_flash.c **** void XMC_FLASH_lEraseSectorCommand(uint32_t *sector_start_address)
+ 136:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 284              	 .loc 1 136 0
+ 285              	 .cfi_startproc
+ 286              	 
+ 287              	 
+ 288              	 
+ 289 0000 80B4     	 push {r7}
+ 290              	.LCFI24:
+ 291              	 .cfi_def_cfa_offset 4
+ 292              	 .cfi_offset 7,-4
+ 293 0002 85B0     	 sub sp,sp,#20
+ 294              	.LCFI25:
+ 295              	 .cfi_def_cfa_offset 24
+ 296 0004 00AF     	 add r7,sp,#0
+ 297              	.LCFI26:
+ 298              	 .cfi_def_cfa_register 7
+ 299 0006 7860     	 str r0,[r7,#4]
+ 137:../Libraries/XMCLib/src/xmc4_flash.c ****   volatile uint32_t *address;
+ 138:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 139:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5554U);
+ 300              	 .loc 1 139 0
+ 301 0008 114B     	 ldr r3,.L14
+ 302 000a FB60     	 str r3,[r7,#12]
+ 140:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0xaaU;
+ 303              	 .loc 1 140 0
+ 304 000c FB68     	 ldr r3,[r7,#12]
+ 305 000e AA22     	 movs r2,#170
+ 306 0010 1A60     	 str r2,[r3]
+ 141:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0xaaa8U);
+ 307              	 .loc 1 141 0
+ 308 0012 104B     	 ldr r3,.L14+4
+ 309 0014 FB60     	 str r3,[r7,#12]
+ 142:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x55U;
+ 310              	 .loc 1 142 0
+ 311 0016 FB68     	 ldr r3,[r7,#12]
+ 312 0018 5522     	 movs r2,#85
+ 313 001a 1A60     	 str r2,[r3]
+ 143:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5554U);
+ 314              	 .loc 1 143 0
+ 315 001c 0C4B     	 ldr r3,.L14
+ 316 001e FB60     	 str r3,[r7,#12]
+ 144:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x80U;
+ 317              	 .loc 1 144 0
+ 318 0020 FB68     	 ldr r3,[r7,#12]
+ 319 0022 8022     	 movs r2,#128
+ 320 0024 1A60     	 str r2,[r3]
+ 145:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5554U);
+ 321              	 .loc 1 145 0
+ 322 0026 0A4B     	 ldr r3,.L14
+ 323 0028 FB60     	 str r3,[r7,#12]
+ 146:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0xaaU;
+ 324              	 .loc 1 146 0
+ 325 002a FB68     	 ldr r3,[r7,#12]
+ 326 002c AA22     	 movs r2,#170
+ 327 002e 1A60     	 str r2,[r3]
+ 147:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0xaaa8U);
+ 328              	 .loc 1 147 0
+ 329 0030 084B     	 ldr r3,.L14+4
+ 330 0032 FB60     	 str r3,[r7,#12]
+ 148:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x55U;
+ 331              	 .loc 1 148 0
+ 332 0034 FB68     	 ldr r3,[r7,#12]
+ 333 0036 5522     	 movs r2,#85
+ 334 0038 1A60     	 str r2,[r3]
+ 149:../Libraries/XMCLib/src/xmc4_flash.c ****   address = sector_start_address;
+ 335              	 .loc 1 149 0
+ 336 003a 7B68     	 ldr r3,[r7,#4]
+ 337 003c FB60     	 str r3,[r7,#12]
+ 150:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x30U;
+ 338              	 .loc 1 150 0
+ 339 003e FB68     	 ldr r3,[r7,#12]
+ 340 0040 3022     	 movs r2,#48
+ 341 0042 1A60     	 str r2,[r3]
+ 151:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 342              	 .loc 1 151 0
+ 343 0044 1437     	 adds r7,r7,#20
+ 344              	.LCFI27:
+ 345              	 .cfi_def_cfa_offset 4
+ 346 0046 BD46     	 mov sp,r7
+ 347              	.LCFI28:
+ 348              	 .cfi_def_cfa_register 13
+ 349              	 
+ 350 0048 5DF8047B 	 ldr r7,[sp],#4
+ 351              	.LCFI29:
+ 352              	 .cfi_restore 7
+ 353              	 .cfi_def_cfa_offset 0
+ 354 004c 7047     	 bx lr
+ 355              	.L15:
+ 356 004e 00BF     	 .align 2
+ 357              	.L14:
+ 358 0050 5455000C 	 .word 201348436
+ 359 0054 A8AA000C 	 .word 201370280
+ 360              	 .cfi_endproc
+ 361              	.LFE146:
+ 363              	 .section .text.XMC_FLASH_lDisableSectorWriteProtectionCommand,"ax",%progbits
+ 364              	 .align 2
+ 365              	 .global XMC_FLASH_lDisableSectorWriteProtectionCommand
+ 366              	 .thumb
+ 367              	 .thumb_func
+ 369              	XMC_FLASH_lDisableSectorWriteProtectionCommand:
+ 370              	.LFB147:
+ 152:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 153:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 154:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+ 155:../Libraries/XMCLib/src/xmc4_flash.c ****  * Command to temporarily disables the write protection belonging to the the USER specified, when p
+ 156:../Libraries/XMCLib/src/xmc4_flash.c ****  * configured values
+ 157:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+ 158:../Libraries/XMCLib/src/xmc4_flash.c **** void XMC_FLASH_lDisableSectorWriteProtectionCommand(uint32_t user, uint32_t password_0, uint32_t pa
+ 159:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 371              	 .loc 1 159 0
+ 372              	 .cfi_startproc
+ 373              	 
+ 374              	 
+ 375              	 
+ 376 0000 80B4     	 push {r7}
+ 377              	.LCFI30:
+ 378              	 .cfi_def_cfa_offset 4
+ 379              	 .cfi_offset 7,-4
+ 380 0002 87B0     	 sub sp,sp,#28
+ 381              	.LCFI31:
+ 382              	 .cfi_def_cfa_offset 32
+ 383 0004 00AF     	 add r7,sp,#0
+ 384              	.LCFI32:
+ 385              	 .cfi_def_cfa_register 7
+ 386 0006 F860     	 str r0,[r7,#12]
+ 387 0008 B960     	 str r1,[r7,#8]
+ 388 000a 7A60     	 str r2,[r7,#4]
+ 160:../Libraries/XMCLib/src/xmc4_flash.c ****   volatile uint32_t *address;
+ 161:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 162:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5554U);
+ 389              	 .loc 1 162 0
+ 390 000c 114B     	 ldr r3,.L17
+ 391 000e 7B61     	 str r3,[r7,#20]
+ 163:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0xaaU;
+ 392              	 .loc 1 163 0
+ 393 0010 7B69     	 ldr r3,[r7,#20]
+ 394 0012 AA22     	 movs r2,#170
+ 395 0014 1A60     	 str r2,[r3]
+ 164:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0xaaa8U);
+ 396              	 .loc 1 164 0
+ 397 0016 104B     	 ldr r3,.L17+4
+ 398 0018 7B61     	 str r3,[r7,#20]
+ 165:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x55U;
+ 399              	 .loc 1 165 0
+ 400 001a 7B69     	 ldr r3,[r7,#20]
+ 401 001c 5522     	 movs r2,#85
+ 402 001e 1A60     	 str r2,[r3]
+ 166:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x553cU);
+ 403              	 .loc 1 166 0
+ 404 0020 0E4B     	 ldr r3,.L17+8
+ 405 0022 7B61     	 str r3,[r7,#20]
+ 167:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = user;
+ 406              	 .loc 1 167 0
+ 407 0024 7B69     	 ldr r3,[r7,#20]
+ 408 0026 FA68     	 ldr r2,[r7,#12]
+ 409 0028 1A60     	 str r2,[r3]
+ 168:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0xaaa8U);
+ 410              	 .loc 1 168 0
+ 411 002a 0B4B     	 ldr r3,.L17+4
+ 412 002c 7B61     	 str r3,[r7,#20]
+ 169:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = password_0;
+ 413              	 .loc 1 169 0
+ 414 002e 7B69     	 ldr r3,[r7,#20]
+ 415 0030 BA68     	 ldr r2,[r7,#8]
+ 416 0032 1A60     	 str r2,[r3]
+ 170:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0xaaa8U);
+ 417              	 .loc 1 170 0
+ 418 0034 084B     	 ldr r3,.L17+4
+ 419 0036 7B61     	 str r3,[r7,#20]
+ 171:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = password_1;
+ 420              	 .loc 1 171 0
+ 421 0038 7B69     	 ldr r3,[r7,#20]
+ 422 003a 7A68     	 ldr r2,[r7,#4]
+ 423 003c 1A60     	 str r2,[r3]
+ 172:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5558U);
+ 424              	 .loc 1 172 0
+ 425 003e 084B     	 ldr r3,.L17+12
+ 426 0040 7B61     	 str r3,[r7,#20]
+ 173:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x05U;
+ 427              	 .loc 1 173 0
+ 428 0042 7B69     	 ldr r3,[r7,#20]
+ 429 0044 0522     	 movs r2,#5
+ 430 0046 1A60     	 str r2,[r3]
+ 174:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 431              	 .loc 1 174 0
+ 432 0048 1C37     	 adds r7,r7,#28
+ 433              	.LCFI33:
+ 434              	 .cfi_def_cfa_offset 4
+ 435 004a BD46     	 mov sp,r7
+ 436              	.LCFI34:
+ 437              	 .cfi_def_cfa_register 13
+ 438              	 
+ 439 004c 5DF8047B 	 ldr r7,[sp],#4
+ 440              	.LCFI35:
+ 441              	 .cfi_restore 7
+ 442              	 .cfi_def_cfa_offset 0
+ 443 0050 7047     	 bx lr
+ 444              	.L18:
+ 445 0052 00BF     	 .align 2
+ 446              	.L17:
+ 447 0054 5455000C 	 .word 201348436
+ 448 0058 A8AA000C 	 .word 201370280
+ 449 005c 3C55000C 	 .word 201348412
+ 450 0060 5855000C 	 .word 201348440
+ 451              	 .cfi_endproc
+ 452              	.LFE147:
+ 454              	 .section .text.XMC_FLASH_lDisableReadProtectionCommand,"ax",%progbits
+ 455              	 .align 2
+ 456              	 .global XMC_FLASH_lDisableReadProtectionCommand
+ 457              	 .thumb
+ 458              	 .thumb_func
+ 460              	XMC_FLASH_lDisableReadProtectionCommand:
+ 461              	.LFB148:
+ 175:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 176:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+ 177:../Libraries/XMCLib/src/xmc4_flash.c ****  * Command to temporarily disables the read protection along with write protection, when passwords 
+ 178:../Libraries/XMCLib/src/xmc4_flash.c ****  * configured values
+ 179:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+ 180:../Libraries/XMCLib/src/xmc4_flash.c **** void XMC_FLASH_lDisableReadProtectionCommand(uint32_t password_0, uint32_t password_1)
+ 181:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 462              	 .loc 1 181 0
+ 463              	 .cfi_startproc
+ 464              	 
+ 465              	 
+ 466              	 
+ 467 0000 80B4     	 push {r7}
+ 468              	.LCFI36:
+ 469              	 .cfi_def_cfa_offset 4
+ 470              	 .cfi_offset 7,-4
+ 471 0002 85B0     	 sub sp,sp,#20
+ 472              	.LCFI37:
+ 473              	 .cfi_def_cfa_offset 24
+ 474 0004 00AF     	 add r7,sp,#0
+ 475              	.LCFI38:
+ 476              	 .cfi_def_cfa_register 7
+ 477 0006 7860     	 str r0,[r7,#4]
+ 478 0008 3960     	 str r1,[r7]
+ 182:../Libraries/XMCLib/src/xmc4_flash.c ****   volatile uint32_t *address;
+ 183:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 184:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5554U);
+ 479              	 .loc 1 184 0
+ 480 000a 114B     	 ldr r3,.L20
+ 481 000c FB60     	 str r3,[r7,#12]
+ 185:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0xaaU;
+ 482              	 .loc 1 185 0
+ 483 000e FB68     	 ldr r3,[r7,#12]
+ 484 0010 AA22     	 movs r2,#170
+ 485 0012 1A60     	 str r2,[r3]
+ 186:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0xaaa8U);
+ 486              	 .loc 1 186 0
+ 487 0014 0F4B     	 ldr r3,.L20+4
+ 488 0016 FB60     	 str r3,[r7,#12]
+ 187:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x55U;
+ 489              	 .loc 1 187 0
+ 490 0018 FB68     	 ldr r3,[r7,#12]
+ 491 001a 5522     	 movs r2,#85
+ 492 001c 1A60     	 str r2,[r3]
+ 188:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x553cU);
+ 493              	 .loc 1 188 0
+ 494 001e 0E4B     	 ldr r3,.L20+8
+ 495 0020 FB60     	 str r3,[r7,#12]
+ 189:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x00U;
+ 496              	 .loc 1 189 0
+ 497 0022 FB68     	 ldr r3,[r7,#12]
+ 498 0024 0022     	 movs r2,#0
+ 499 0026 1A60     	 str r2,[r3]
+ 190:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0xaaa8U);
+ 500              	 .loc 1 190 0
+ 501 0028 0A4B     	 ldr r3,.L20+4
+ 502 002a FB60     	 str r3,[r7,#12]
+ 191:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = password_0;
+ 503              	 .loc 1 191 0
+ 504 002c FB68     	 ldr r3,[r7,#12]
+ 505 002e 7A68     	 ldr r2,[r7,#4]
+ 506 0030 1A60     	 str r2,[r3]
+ 192:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0xaaa8U);
+ 507              	 .loc 1 192 0
+ 508 0032 084B     	 ldr r3,.L20+4
+ 509 0034 FB60     	 str r3,[r7,#12]
+ 193:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = password_1;
+ 510              	 .loc 1 193 0
+ 511 0036 FB68     	 ldr r3,[r7,#12]
+ 512 0038 3A68     	 ldr r2,[r7]
+ 513 003a 1A60     	 str r2,[r3]
+ 194:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5558U);
+ 514              	 .loc 1 194 0
+ 515 003c 074B     	 ldr r3,.L20+12
+ 516 003e FB60     	 str r3,[r7,#12]
+ 195:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x08U;
+ 517              	 .loc 1 195 0
+ 518 0040 FB68     	 ldr r3,[r7,#12]
+ 519 0042 0822     	 movs r2,#8
+ 520 0044 1A60     	 str r2,[r3]
+ 196:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 521              	 .loc 1 196 0
+ 522 0046 1437     	 adds r7,r7,#20
+ 523              	.LCFI39:
+ 524              	 .cfi_def_cfa_offset 4
+ 525 0048 BD46     	 mov sp,r7
+ 526              	.LCFI40:
+ 527              	 .cfi_def_cfa_register 13
+ 528              	 
+ 529 004a 5DF8047B 	 ldr r7,[sp],#4
+ 530              	.LCFI41:
+ 531              	 .cfi_restore 7
+ 532              	 .cfi_def_cfa_offset 0
+ 533 004e 7047     	 bx lr
+ 534              	.L21:
+ 535              	 .align 2
+ 536              	.L20:
+ 537 0050 5455000C 	 .word 201348436
+ 538 0054 A8AA000C 	 .word 201370280
+ 539 0058 3C55000C 	 .word 201348412
+ 540 005c 5855000C 	 .word 201348440
+ 541              	 .cfi_endproc
+ 542              	.LFE148:
+ 544              	 .section .text.XMC_FLASH_lClearStatusCommand,"ax",%progbits
+ 545              	 .align 2
+ 546              	 .global XMC_FLASH_lClearStatusCommand
+ 547              	 .thumb
+ 548              	 .thumb_func
+ 550              	XMC_FLASH_lClearStatusCommand:
+ 551              	.LFB149:
+ 197:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 198:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+ 199:../Libraries/XMCLib/src/xmc4_flash.c ****  * Command to clear FSR.PROG and FSR.ERASE and the error flags in FSR such as PFOPER, SQER, PROER, 
+ 200:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+ 201:../Libraries/XMCLib/src/xmc4_flash.c **** void XMC_FLASH_lClearStatusCommand(void)
+ 202:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 552              	 .loc 1 202 0
+ 553              	 .cfi_startproc
+ 554              	 
+ 555              	 
+ 556              	 
+ 557 0000 80B4     	 push {r7}
+ 558              	.LCFI42:
+ 559              	 .cfi_def_cfa_offset 4
+ 560              	 .cfi_offset 7,-4
+ 561 0002 83B0     	 sub sp,sp,#12
+ 562              	.LCFI43:
+ 563              	 .cfi_def_cfa_offset 16
+ 564 0004 00AF     	 add r7,sp,#0
+ 565              	.LCFI44:
+ 566              	 .cfi_def_cfa_register 7
+ 203:../Libraries/XMCLib/src/xmc4_flash.c ****   volatile uint32_t *address;
+ 204:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 205:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5554U);
+ 567              	 .loc 1 205 0
+ 568 0006 054B     	 ldr r3,.L23
+ 569 0008 7B60     	 str r3,[r7,#4]
+ 206:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0xf5U;
+ 570              	 .loc 1 206 0
+ 571 000a 7B68     	 ldr r3,[r7,#4]
+ 572 000c F522     	 movs r2,#245
+ 573 000e 1A60     	 str r2,[r3]
+ 207:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 574              	 .loc 1 207 0
+ 575 0010 0C37     	 adds r7,r7,#12
+ 576              	.LCFI45:
+ 577              	 .cfi_def_cfa_offset 4
+ 578 0012 BD46     	 mov sp,r7
+ 579              	.LCFI46:
+ 580              	 .cfi_def_cfa_register 13
+ 581              	 
+ 582 0014 5DF8047B 	 ldr r7,[sp],#4
+ 583              	.LCFI47:
+ 584              	 .cfi_restore 7
+ 585              	 .cfi_def_cfa_offset 0
+ 586 0018 7047     	 bx lr
+ 587              	.L24:
+ 588 001a 00BF     	 .align 2
+ 589              	.L23:
+ 590 001c 5455000C 	 .word 201348436
+ 591              	 .cfi_endproc
+ 592              	.LFE149:
+ 594              	 .section .text.XMC_FLASH_ClearStatus,"ax",%progbits
+ 595              	 .align 2
+ 596              	 .global XMC_FLASH_ClearStatus
+ 597              	 .thumb
+ 598              	 .thumb_func
+ 600              	XMC_FLASH_ClearStatus:
+ 601              	.LFB150:
+ 208:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 209:../Libraries/XMCLib/src/xmc4_flash.c **** /**************************************************************************************************
+ 210:../Libraries/XMCLib/src/xmc4_flash.c ****  * API IMPLEMENTATION
+ 211:../Libraries/XMCLib/src/xmc4_flash.c ****  **************************************************************************************************
+ 212:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 213:../Libraries/XMCLib/src/xmc4_flash.c ****  /*
+ 214:../Libraries/XMCLib/src/xmc4_flash.c ****  * This API shall clear Program, erase and error flags(PFOPER, SQER, PROER, PFDBER, ORIER, VER) of 
+ 215:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+ 216:../Libraries/XMCLib/src/xmc4_flash.c **** void XMC_FLASH_ClearStatus(void)
+ 217:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 602              	 .loc 1 217 0
+ 603              	 .cfi_startproc
+ 604              	 
+ 605              	 
+ 606 0000 80B5     	 push {r7,lr}
+ 607              	.LCFI48:
+ 608              	 .cfi_def_cfa_offset 8
+ 609              	 .cfi_offset 7,-8
+ 610              	 .cfi_offset 14,-4
+ 611 0002 00AF     	 add r7,sp,#0
+ 612              	.LCFI49:
+ 613              	 .cfi_def_cfa_register 7
+ 218:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lClearStatusCommand();
+ 614              	 .loc 1 218 0
+ 615 0004 FFF7FEFF 	 bl XMC_FLASH_lClearStatusCommand
+ 219:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 616              	 .loc 1 219 0
+ 617 0008 80BD     	 pop {r7,pc}
+ 618              	 .cfi_endproc
+ 619              	.LFE150:
+ 621 000a 00BF     	 .section .text.XMC_FLASH_GetStatus,"ax",%progbits
+ 622              	 .align 2
+ 623              	 .global XMC_FLASH_GetStatus
+ 624              	 .thumb
+ 625              	 .thumb_func
+ 627              	XMC_FLASH_GetStatus:
+ 628              	.LFB151:
+ 220:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 221:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+ 222:../Libraries/XMCLib/src/xmc4_flash.c ****  * This API returns the FSR register value
+ 223:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+ 224:../Libraries/XMCLib/src/xmc4_flash.c **** uint32_t XMC_FLASH_GetStatus(void)
+ 225:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 629              	 .loc 1 225 0
+ 630              	 .cfi_startproc
+ 631              	 
+ 632              	 
+ 633              	 
+ 634 0000 80B4     	 push {r7}
+ 635              	.LCFI50:
+ 636              	 .cfi_def_cfa_offset 4
+ 637              	 .cfi_offset 7,-4
+ 638 0002 00AF     	 add r7,sp,#0
+ 639              	.LCFI51:
+ 640              	 .cfi_def_cfa_register 7
+ 226:../Libraries/XMCLib/src/xmc4_flash.c ****   return FLASH0->FSR;
+ 641              	 .loc 1 226 0
+ 642 0004 044B     	 ldr r3,.L28
+ 643 0006 03F58053 	 add r3,r3,#4096
+ 644 000a 1033     	 adds r3,r3,#16
+ 645 000c 1B68     	 ldr r3,[r3]
+ 227:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 646              	 .loc 1 227 0
+ 647 000e 1846     	 mov r0,r3
+ 648 0010 BD46     	 mov sp,r7
+ 649              	.LCFI52:
+ 650              	 .cfi_def_cfa_register 13
+ 651              	 
+ 652 0012 5DF8047B 	 ldr r7,[sp],#4
+ 653              	.LCFI53:
+ 654              	 .cfi_restore 7
+ 655              	 .cfi_def_cfa_offset 0
+ 656 0016 7047     	 bx lr
+ 657              	.L29:
+ 658              	 .align 2
+ 659              	.L28:
+ 660 0018 00100058 	 .word 1476399104
+ 661              	 .cfi_endproc
+ 662              	.LFE151:
+ 664              	 .section .text.XMC_FLASH_EnableEvent,"ax",%progbits
+ 665              	 .align 2
+ 666              	 .global XMC_FLASH_EnableEvent
+ 667              	 .thumb
+ 668              	 .thumb_func
+ 670              	XMC_FLASH_EnableEvent:
+ 671              	.LFB152:
+ 228:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 229:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+ 230:../Libraries/XMCLib/src/xmc4_flash.c ****  * This API enables the events which required to trigger the ISR 
+ 231:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+ 232:../Libraries/XMCLib/src/xmc4_flash.c **** void XMC_FLASH_EnableEvent(const uint32_t event_msk)
+ 233:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 672              	 .loc 1 233 0
+ 673              	 .cfi_startproc
+ 674              	 
+ 675              	 
+ 676              	 
+ 677 0000 80B4     	 push {r7}
+ 678              	.LCFI54:
+ 679              	 .cfi_def_cfa_offset 4
+ 680              	 .cfi_offset 7,-4
+ 681 0002 83B0     	 sub sp,sp,#12
+ 682              	.LCFI55:
+ 683              	 .cfi_def_cfa_offset 16
+ 684 0004 00AF     	 add r7,sp,#0
+ 685              	.LCFI56:
+ 686              	 .cfi_def_cfa_register 7
+ 687 0006 7860     	 str r0,[r7,#4]
+ 234:../Libraries/XMCLib/src/xmc4_flash.c ****   FLASH0->FCON |= event_msk;
+ 688              	 .loc 1 234 0
+ 689 0008 0849     	 ldr r1,.L31
+ 690 000a 084B     	 ldr r3,.L31
+ 691 000c 03F58053 	 add r3,r3,#4096
+ 692 0010 1433     	 adds r3,r3,#20
+ 693 0012 1A68     	 ldr r2,[r3]
+ 694 0014 7B68     	 ldr r3,[r7,#4]
+ 695 0016 1A43     	 orrs r2,r2,r3
+ 696 0018 01F58053 	 add r3,r1,#4096
+ 697 001c 1433     	 adds r3,r3,#20
+ 698 001e 1A60     	 str r2,[r3]
+ 235:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 699              	 .loc 1 235 0
+ 700 0020 0C37     	 adds r7,r7,#12
+ 701              	.LCFI57:
+ 702              	 .cfi_def_cfa_offset 4
+ 703 0022 BD46     	 mov sp,r7
+ 704              	.LCFI58:
+ 705              	 .cfi_def_cfa_register 13
+ 706              	 
+ 707 0024 5DF8047B 	 ldr r7,[sp],#4
+ 708              	.LCFI59:
+ 709              	 .cfi_restore 7
+ 710              	 .cfi_def_cfa_offset 0
+ 711 0028 7047     	 bx lr
+ 712              	.L32:
+ 713 002a 00BF     	 .align 2
+ 714              	.L31:
+ 715 002c 00100058 	 .word 1476399104
+ 716              	 .cfi_endproc
+ 717              	.LFE152:
+ 719              	 .section .text.XMC_FLASH_DisableEvent,"ax",%progbits
+ 720              	 .align 2
+ 721              	 .global XMC_FLASH_DisableEvent
+ 722              	 .thumb
+ 723              	 .thumb_func
+ 725              	XMC_FLASH_DisableEvent:
+ 726              	.LFB153:
+ 236:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 237:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+ 238:../Libraries/XMCLib/src/xmc4_flash.c ****  * This API disables the event generation 
+ 239:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+ 240:../Libraries/XMCLib/src/xmc4_flash.c **** void XMC_FLASH_DisableEvent(const uint32_t event_msk)
+ 241:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 727              	 .loc 1 241 0
+ 728              	 .cfi_startproc
+ 729              	 
+ 730              	 
+ 731              	 
+ 732 0000 80B4     	 push {r7}
+ 733              	.LCFI60:
+ 734              	 .cfi_def_cfa_offset 4
+ 735              	 .cfi_offset 7,-4
+ 736 0002 83B0     	 sub sp,sp,#12
+ 737              	.LCFI61:
+ 738              	 .cfi_def_cfa_offset 16
+ 739 0004 00AF     	 add r7,sp,#0
+ 740              	.LCFI62:
+ 741              	 .cfi_def_cfa_register 7
+ 742 0006 7860     	 str r0,[r7,#4]
+ 242:../Libraries/XMCLib/src/xmc4_flash.c ****   FLASH0->FCON &= ~event_msk;
+ 743              	 .loc 1 242 0
+ 744 0008 0849     	 ldr r1,.L34
+ 745 000a 084B     	 ldr r3,.L34
+ 746 000c 03F58053 	 add r3,r3,#4096
+ 747 0010 1433     	 adds r3,r3,#20
+ 748 0012 1A68     	 ldr r2,[r3]
+ 749 0014 7B68     	 ldr r3,[r7,#4]
+ 750 0016 DB43     	 mvns r3,r3
+ 751 0018 1A40     	 ands r2,r2,r3
+ 752 001a 01F58053 	 add r3,r1,#4096
+ 753 001e 1433     	 adds r3,r3,#20
+ 754 0020 1A60     	 str r2,[r3]
+ 243:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 755              	 .loc 1 243 0
+ 756 0022 0C37     	 adds r7,r7,#12
+ 757              	.LCFI63:
+ 758              	 .cfi_def_cfa_offset 4
+ 759 0024 BD46     	 mov sp,r7
+ 760              	.LCFI64:
+ 761              	 .cfi_def_cfa_register 13
+ 762              	 
+ 763 0026 5DF8047B 	 ldr r7,[sp],#4
+ 764              	.LCFI65:
+ 765              	 .cfi_restore 7
+ 766              	 .cfi_def_cfa_offset 0
+ 767 002a 7047     	 bx lr
+ 768              	.L35:
+ 769              	 .align 2
+ 770              	.L34:
+ 771 002c 00100058 	 .word 1476399104
+ 772              	 .cfi_endproc
+ 773              	.LFE153:
+ 775              	 .section .text.XMC_FLASH_ProgramPage,"ax",%progbits
+ 776              	 .align 2
+ 777              	 .global XMC_FLASH_ProgramPage
+ 778              	 .thumb
+ 779              	 .thumb_func
+ 781              	XMC_FLASH_ProgramPage:
+ 782              	.LFB154:
+ 244:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 245:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+ 246:../Libraries/XMCLib/src/xmc4_flash.c ****  * This API write the PFLASH page
+ 247:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+ 248:../Libraries/XMCLib/src/xmc4_flash.c **** void XMC_FLASH_ProgramPage(uint32_t *address, const uint32_t *data)
+ 249:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 783              	 .loc 1 249 0
+ 784              	 .cfi_startproc
+ 785              	 
+ 786              	 
+ 787 0000 80B5     	 push {r7,lr}
+ 788              	.LCFI66:
+ 789              	 .cfi_def_cfa_offset 8
+ 790              	 .cfi_offset 7,-8
+ 791              	 .cfi_offset 14,-4
+ 792 0002 84B0     	 sub sp,sp,#16
+ 793              	.LCFI67:
+ 794              	 .cfi_def_cfa_offset 24
+ 795 0004 00AF     	 add r7,sp,#0
+ 796              	.LCFI68:
+ 797              	 .cfi_def_cfa_register 7
+ 798 0006 7860     	 str r0,[r7,#4]
+ 799 0008 3960     	 str r1,[r7]
+ 250:../Libraries/XMCLib/src/xmc4_flash.c ****   uint32_t index;
+ 251:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 252:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lClearStatusCommand();  
+ 800              	 .loc 1 252 0
+ 801 000a FFF7FEFF 	 bl XMC_FLASH_lClearStatusCommand
+ 253:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lEnterPageModeCommand();
+ 802              	 .loc 1 253 0
+ 803 000e FFF7FEFF 	 bl XMC_FLASH_lEnterPageModeCommand
+ 254:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 255:../Libraries/XMCLib/src/xmc4_flash.c ****   for (index = 0; index < XMC_FLASH_WORDS_PER_PAGE; index += 2)
+ 804              	 .loc 1 255 0
+ 805 0012 0023     	 movs r3,#0
+ 806 0014 FB60     	 str r3,[r7,#12]
+ 807 0016 11E0     	 b .L37
+ 808              	.L38:
+ 256:../Libraries/XMCLib/src/xmc4_flash.c ****   {
+ 257:../Libraries/XMCLib/src/xmc4_flash.c ****     XMC_FLASH_lLoadPageCommand(data[index], data[index + 1]);
+ 809              	 .loc 1 257 0 discriminator 3
+ 810 0018 FB68     	 ldr r3,[r7,#12]
+ 811 001a 9B00     	 lsls r3,r3,#2
+ 812 001c 3A68     	 ldr r2,[r7]
+ 813 001e 1344     	 add r3,r3,r2
+ 814 0020 1968     	 ldr r1,[r3]
+ 815 0022 FB68     	 ldr r3,[r7,#12]
+ 816 0024 0133     	 adds r3,r3,#1
+ 817 0026 9B00     	 lsls r3,r3,#2
+ 818 0028 3A68     	 ldr r2,[r7]
+ 819 002a 1344     	 add r3,r3,r2
+ 820 002c 1B68     	 ldr r3,[r3]
+ 821 002e 0846     	 mov r0,r1
+ 822 0030 1946     	 mov r1,r3
+ 823 0032 FFF7FEFF 	 bl XMC_FLASH_lLoadPageCommand
+ 255:../Libraries/XMCLib/src/xmc4_flash.c ****   {
+ 824              	 .loc 1 255 0 discriminator 3
+ 825 0036 FB68     	 ldr r3,[r7,#12]
+ 826 0038 0233     	 adds r3,r3,#2
+ 827 003a FB60     	 str r3,[r7,#12]
+ 828              	.L37:
+ 255:../Libraries/XMCLib/src/xmc4_flash.c ****   {
+ 829              	 .loc 1 255 0 is_stmt 0 discriminator 1
+ 830 003c FB68     	 ldr r3,[r7,#12]
+ 831 003e 3F2B     	 cmp r3,#63
+ 832 0040 EAD9     	 bls .L38
+ 258:../Libraries/XMCLib/src/xmc4_flash.c ****   }
+ 259:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 260:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lWritePageCommand(address);    
+ 833              	 .loc 1 260 0 is_stmt 1
+ 834 0042 7868     	 ldr r0,[r7,#4]
+ 835 0044 FFF7FEFF 	 bl XMC_FLASH_lWritePageCommand
+ 261:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 836              	 .loc 1 261 0
+ 837 0048 1037     	 adds r7,r7,#16
+ 838              	.LCFI69:
+ 839              	 .cfi_def_cfa_offset 8
+ 840 004a BD46     	 mov sp,r7
+ 841              	.LCFI70:
+ 842              	 .cfi_def_cfa_register 13
+ 843              	 
+ 844 004c 80BD     	 pop {r7,pc}
+ 845              	 .cfi_endproc
+ 846              	.LFE154:
+ 848 004e 00BF     	 .section .text.XMC_FLASH_EraseSector,"ax",%progbits
+ 849              	 .align 2
+ 850              	 .global XMC_FLASH_EraseSector
+ 851              	 .thumb
+ 852              	 .thumb_func
+ 854              	XMC_FLASH_EraseSector:
+ 855              	.LFB155:
+ 262:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 263:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+ 264:../Libraries/XMCLib/src/xmc4_flash.c ****  * This API erase the logical sector
+ 265:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+ 266:../Libraries/XMCLib/src/xmc4_flash.c **** void XMC_FLASH_EraseSector(uint32_t *address)
+ 267:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 856              	 .loc 1 267 0
+ 857              	 .cfi_startproc
+ 858              	 
+ 859              	 
+ 860 0000 80B5     	 push {r7,lr}
+ 861              	.LCFI71:
+ 862              	 .cfi_def_cfa_offset 8
+ 863              	 .cfi_offset 7,-8
+ 864              	 .cfi_offset 14,-4
+ 865 0002 82B0     	 sub sp,sp,#8
+ 866              	.LCFI72:
+ 867              	 .cfi_def_cfa_offset 16
+ 868 0004 00AF     	 add r7,sp,#0
+ 869              	.LCFI73:
+ 870              	 .cfi_def_cfa_register 7
+ 871 0006 7860     	 str r0,[r7,#4]
+ 268:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lClearStatusCommand();
+ 872              	 .loc 1 268 0
+ 873 0008 FFF7FEFF 	 bl XMC_FLASH_lClearStatusCommand
+ 269:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lEraseSectorCommand(address);
+ 874              	 .loc 1 269 0
+ 875 000c 7868     	 ldr r0,[r7,#4]
+ 876 000e FFF7FEFF 	 bl XMC_FLASH_lEraseSectorCommand
+ 270:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 877              	 .loc 1 270 0
+ 878 0012 0837     	 adds r7,r7,#8
+ 879              	.LCFI74:
+ 880              	 .cfi_def_cfa_offset 8
+ 881 0014 BD46     	 mov sp,r7
+ 882              	.LCFI75:
+ 883              	 .cfi_def_cfa_register 13
+ 884              	 
+ 885 0016 80BD     	 pop {r7,pc}
+ 886              	 .cfi_endproc
+ 887              	.LFE155:
+ 889              	 .section .text.XMC_FLASH_lErasePhysicalSectorCommand,"ax",%progbits
+ 890              	 .align 2
+ 891              	 .global XMC_FLASH_lErasePhysicalSectorCommand
+ 892              	 .thumb
+ 893              	 .thumb_func
+ 895              	XMC_FLASH_lErasePhysicalSectorCommand:
+ 896              	.LFB156:
+ 271:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 272:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+ 273:../Libraries/XMCLib/src/xmc4_flash.c ****  * Command to erase physical sector which is starting with the specified address
+ 274:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+ 275:../Libraries/XMCLib/src/xmc4_flash.c **** void XMC_FLASH_lErasePhysicalSectorCommand(uint32_t *sector_start_address)
+ 276:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 897              	 .loc 1 276 0
+ 898              	 .cfi_startproc
+ 899              	 
+ 900              	 
+ 901              	 
+ 902 0000 80B4     	 push {r7}
+ 903              	.LCFI76:
+ 904              	 .cfi_def_cfa_offset 4
+ 905              	 .cfi_offset 7,-4
+ 906 0002 85B0     	 sub sp,sp,#20
+ 907              	.LCFI77:
+ 908              	 .cfi_def_cfa_offset 24
+ 909 0004 00AF     	 add r7,sp,#0
+ 910              	.LCFI78:
+ 911              	 .cfi_def_cfa_register 7
+ 912 0006 7860     	 str r0,[r7,#4]
+ 277:../Libraries/XMCLib/src/xmc4_flash.c ****   volatile uint32_t *address;
+ 278:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 279:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5554U);
+ 913              	 .loc 1 279 0
+ 914 0008 114B     	 ldr r3,.L41
+ 915 000a FB60     	 str r3,[r7,#12]
+ 280:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0xaaU;
+ 916              	 .loc 1 280 0
+ 917 000c FB68     	 ldr r3,[r7,#12]
+ 918 000e AA22     	 movs r2,#170
+ 919 0010 1A60     	 str r2,[r3]
+ 281:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0xaaa8U);
+ 920              	 .loc 1 281 0
+ 921 0012 104B     	 ldr r3,.L41+4
+ 922 0014 FB60     	 str r3,[r7,#12]
+ 282:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x55U;
+ 923              	 .loc 1 282 0
+ 924 0016 FB68     	 ldr r3,[r7,#12]
+ 925 0018 5522     	 movs r2,#85
+ 926 001a 1A60     	 str r2,[r3]
+ 283:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5554U);
+ 927              	 .loc 1 283 0
+ 928 001c 0C4B     	 ldr r3,.L41
+ 929 001e FB60     	 str r3,[r7,#12]
+ 284:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x80U;
+ 930              	 .loc 1 284 0
+ 931 0020 FB68     	 ldr r3,[r7,#12]
+ 932 0022 8022     	 movs r2,#128
+ 933 0024 1A60     	 str r2,[r3]
+ 285:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5554U);
+ 934              	 .loc 1 285 0
+ 935 0026 0A4B     	 ldr r3,.L41
+ 936 0028 FB60     	 str r3,[r7,#12]
+ 286:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0xaaU;
+ 937              	 .loc 1 286 0
+ 938 002a FB68     	 ldr r3,[r7,#12]
+ 939 002c AA22     	 movs r2,#170
+ 940 002e 1A60     	 str r2,[r3]
+ 287:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0xaaa8U);
+ 941              	 .loc 1 287 0
+ 942 0030 084B     	 ldr r3,.L41+4
+ 943 0032 FB60     	 str r3,[r7,#12]
+ 288:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x55U;
+ 944              	 .loc 1 288 0
+ 945 0034 FB68     	 ldr r3,[r7,#12]
+ 946 0036 5522     	 movs r2,#85
+ 947 0038 1A60     	 str r2,[r3]
+ 289:../Libraries/XMCLib/src/xmc4_flash.c ****   address = sector_start_address;
+ 948              	 .loc 1 289 0
+ 949 003a 7B68     	 ldr r3,[r7,#4]
+ 950 003c FB60     	 str r3,[r7,#12]
+ 290:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x40U;
+ 951              	 .loc 1 290 0
+ 952 003e FB68     	 ldr r3,[r7,#12]
+ 953 0040 4022     	 movs r2,#64
+ 954 0042 1A60     	 str r2,[r3]
+ 291:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 955              	 .loc 1 291 0
+ 956 0044 1437     	 adds r7,r7,#20
+ 957              	.LCFI79:
+ 958              	 .cfi_def_cfa_offset 4
+ 959 0046 BD46     	 mov sp,r7
+ 960              	.LCFI80:
+ 961              	 .cfi_def_cfa_register 13
+ 962              	 
+ 963 0048 5DF8047B 	 ldr r7,[sp],#4
+ 964              	.LCFI81:
+ 965              	 .cfi_restore 7
+ 966              	 .cfi_def_cfa_offset 0
+ 967 004c 7047     	 bx lr
+ 968              	.L42:
+ 969 004e 00BF     	 .align 2
+ 970              	.L41:
+ 971 0050 5455000C 	 .word 201348436
+ 972 0054 A8AA000C 	 .word 201370280
+ 973              	 .cfi_endproc
+ 974              	.LFE156:
+ 976              	 .section .text.XMC_FLASH_lRepairPhysicalSectorCommand,"ax",%progbits
+ 977              	 .align 2
+ 978              	 .global XMC_FLASH_lRepairPhysicalSectorCommand
+ 979              	 .thumb
+ 980              	 .thumb_func
+ 982              	XMC_FLASH_lRepairPhysicalSectorCommand:
+ 983              	.LFB157:
+ 292:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 293:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+ 294:../Libraries/XMCLib/src/xmc4_flash.c ****  * Command to erase physical sector-4 which is starting with the specified address
+ 295:../Libraries/XMCLib/src/xmc4_flash.c ****  * This command is only available if PROCON1.PRS = 1.
+ 296:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+ 297:../Libraries/XMCLib/src/xmc4_flash.c **** void XMC_FLASH_lRepairPhysicalSectorCommand(void)
+ 298:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 984              	 .loc 1 298 0
+ 985              	 .cfi_startproc
+ 986              	 
+ 987              	 
+ 988              	 
+ 989 0000 80B4     	 push {r7}
+ 990              	.LCFI82:
+ 991              	 .cfi_def_cfa_offset 4
+ 992              	 .cfi_offset 7,-4
+ 993 0002 83B0     	 sub sp,sp,#12
+ 994              	.LCFI83:
+ 995              	 .cfi_def_cfa_offset 16
+ 996 0004 00AF     	 add r7,sp,#0
+ 997              	.LCFI84:
+ 998              	 .cfi_def_cfa_register 7
+ 299:../Libraries/XMCLib/src/xmc4_flash.c ****   volatile uint32_t *address;
+ 300:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 301:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5554U);
+ 999              	 .loc 1 301 0
+ 1000 0006 114B     	 ldr r3,.L44
+ 1001 0008 7B60     	 str r3,[r7,#4]
+ 302:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0xaaU;
+ 1002              	 .loc 1 302 0
+ 1003 000a 7B68     	 ldr r3,[r7,#4]
+ 1004 000c AA22     	 movs r2,#170
+ 1005 000e 1A60     	 str r2,[r3]
+ 303:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0xaaa8U);
+ 1006              	 .loc 1 303 0
+ 1007 0010 0F4B     	 ldr r3,.L44+4
+ 1008 0012 7B60     	 str r3,[r7,#4]
+ 304:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x55U;
+ 1009              	 .loc 1 304 0
+ 1010 0014 7B68     	 ldr r3,[r7,#4]
+ 1011 0016 5522     	 movs r2,#85
+ 1012 0018 1A60     	 str r2,[r3]
+ 305:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5554U);
+ 1013              	 .loc 1 305 0
+ 1014 001a 0C4B     	 ldr r3,.L44
+ 1015 001c 7B60     	 str r3,[r7,#4]
+ 306:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x80U;
+ 1016              	 .loc 1 306 0
+ 1017 001e 7B68     	 ldr r3,[r7,#4]
+ 1018 0020 8022     	 movs r2,#128
+ 1019 0022 1A60     	 str r2,[r3]
+ 307:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5554U);
+ 1020              	 .loc 1 307 0
+ 1021 0024 094B     	 ldr r3,.L44
+ 1022 0026 7B60     	 str r3,[r7,#4]
+ 308:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0xaaU;
+ 1023              	 .loc 1 308 0
+ 1024 0028 7B68     	 ldr r3,[r7,#4]
+ 1025 002a AA22     	 movs r2,#170
+ 1026 002c 1A60     	 str r2,[r3]
+ 309:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0xaaa8U);
+ 1027              	 .loc 1 309 0
+ 1028 002e 084B     	 ldr r3,.L44+4
+ 1029 0030 7B60     	 str r3,[r7,#4]
+ 310:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x55U;
+ 1030              	 .loc 1 310 0
+ 1031 0032 7B68     	 ldr r3,[r7,#4]
+ 1032 0034 5522     	 movs r2,#85
+ 1033 0036 1A60     	 str r2,[r3]
+ 311:../Libraries/XMCLib/src/xmc4_flash.c ****   address = XMC_FLASH_PHY_SECTOR_4;
+ 1034              	 .loc 1 311 0
+ 1035 0038 064B     	 ldr r3,.L44+8
+ 1036 003a 7B60     	 str r3,[r7,#4]
+ 312:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x40U;
+ 1037              	 .loc 1 312 0
+ 1038 003c 7B68     	 ldr r3,[r7,#4]
+ 1039 003e 4022     	 movs r2,#64
+ 1040 0040 1A60     	 str r2,[r3]
+ 313:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 1041              	 .loc 1 313 0
+ 1042 0042 0C37     	 adds r7,r7,#12
+ 1043              	.LCFI85:
+ 1044              	 .cfi_def_cfa_offset 4
+ 1045 0044 BD46     	 mov sp,r7
+ 1046              	.LCFI86:
+ 1047              	 .cfi_def_cfa_register 13
+ 1048              	 
+ 1049 0046 5DF8047B 	 ldr r7,[sp],#4
+ 1050              	.LCFI87:
+ 1051              	 .cfi_restore 7
+ 1052              	 .cfi_def_cfa_offset 0
+ 1053 004a 7047     	 bx lr
+ 1054              	.L45:
+ 1055              	 .align 2
+ 1056              	.L44:
+ 1057 004c 5455000C 	 .word 201348436
+ 1058 0050 A8AA000C 	 .word 201370280
+ 1059 0054 0000010C 	 .word 201392128
+ 1060              	 .cfi_endproc
+ 1061              	.LFE157:
+ 1063              	 .section .text.XMC_FLASH_ErasePhysicalSector,"ax",%progbits
+ 1064              	 .align 2
+ 1065              	 .global XMC_FLASH_ErasePhysicalSector
+ 1066              	 .thumb
+ 1067              	 .thumb_func
+ 1069              	XMC_FLASH_ErasePhysicalSector:
+ 1070              	.LFB158:
+ 314:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 315:../Libraries/XMCLib/src/xmc4_flash.c ****  /* 
+ 316:../Libraries/XMCLib/src/xmc4_flash.c ****   * This API erase the physical sector
+ 317:../Libraries/XMCLib/src/xmc4_flash.c ****   */
+ 318:../Libraries/XMCLib/src/xmc4_flash.c **** void XMC_FLASH_ErasePhysicalSector(uint32_t *address)
+ 319:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 1071              	 .loc 1 319 0
+ 1072              	 .cfi_startproc
+ 1073              	 
+ 1074              	 
+ 1075 0000 80B5     	 push {r7,lr}
+ 1076              	.LCFI88:
+ 1077              	 .cfi_def_cfa_offset 8
+ 1078              	 .cfi_offset 7,-8
+ 1079              	 .cfi_offset 14,-4
+ 1080 0002 82B0     	 sub sp,sp,#8
+ 1081              	.LCFI89:
+ 1082              	 .cfi_def_cfa_offset 16
+ 1083 0004 00AF     	 add r7,sp,#0
+ 1084              	.LCFI90:
+ 1085              	 .cfi_def_cfa_register 7
+ 1086 0006 7860     	 str r0,[r7,#4]
+ 320:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lClearStatusCommand();
+ 1087              	 .loc 1 320 0
+ 1088 0008 FFF7FEFF 	 bl XMC_FLASH_lClearStatusCommand
+ 321:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lErasePhysicalSectorCommand(address);
+ 1089              	 .loc 1 321 0
+ 1090 000c 7868     	 ldr r0,[r7,#4]
+ 1091 000e FFF7FEFF 	 bl XMC_FLASH_lErasePhysicalSectorCommand
+ 322:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 1092              	 .loc 1 322 0
+ 1093 0012 0837     	 adds r7,r7,#8
+ 1094              	.LCFI91:
+ 1095              	 .cfi_def_cfa_offset 8
+ 1096 0014 BD46     	 mov sp,r7
+ 1097              	.LCFI92:
+ 1098              	 .cfi_def_cfa_register 13
+ 1099              	 
+ 1100 0016 80BD     	 pop {r7,pc}
+ 1101              	 .cfi_endproc
+ 1102              	.LFE158:
+ 1104              	 .section .text.XMC_FLASH_RepairPhysicalSector,"ax",%progbits
+ 1105              	 .align 2
+ 1106              	 .global XMC_FLASH_RepairPhysicalSector
+ 1107              	 .thumb
+ 1108              	 .thumb_func
+ 1110              	XMC_FLASH_RepairPhysicalSector:
+ 1111              	.LFB159:
+ 323:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 324:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+ 325:../Libraries/XMCLib/src/xmc4_flash.c ****  * This API repair the physical sector
+ 326:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+ 327:../Libraries/XMCLib/src/xmc4_flash.c **** void XMC_FLASH_RepairPhysicalSector(void)
+ 328:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 1112              	 .loc 1 328 0
+ 1113              	 .cfi_startproc
+ 1114              	 
+ 1115              	 
+ 1116 0000 80B5     	 push {r7,lr}
+ 1117              	.LCFI93:
+ 1118              	 .cfi_def_cfa_offset 8
+ 1119              	 .cfi_offset 7,-8
+ 1120              	 .cfi_offset 14,-4
+ 1121 0002 00AF     	 add r7,sp,#0
+ 1122              	.LCFI94:
+ 1123              	 .cfi_def_cfa_register 7
+ 329:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lClearStatusCommand();
+ 1124              	 .loc 1 329 0
+ 1125 0004 FFF7FEFF 	 bl XMC_FLASH_lClearStatusCommand
+ 330:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lRepairPhysicalSectorCommand();
+ 1126              	 .loc 1 330 0
+ 1127 0008 FFF7FEFF 	 bl XMC_FLASH_lRepairPhysicalSectorCommand
+ 331:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 1128              	 .loc 1 331 0
+ 1129 000c 80BD     	 pop {r7,pc}
+ 1130              	 .cfi_endproc
+ 1131              	.LFE159:
+ 1133 000e 00BF     	 .section .text.XMC_FLASH_EraseUCB,"ax",%progbits
+ 1134              	 .align 2
+ 1135              	 .global XMC_FLASH_EraseUCB
+ 1136              	 .thumb
+ 1137              	 .thumb_func
+ 1139              	XMC_FLASH_EraseUCB:
+ 1140              	.LFB160:
+ 332:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 333:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+ 334:../Libraries/XMCLib/src/xmc4_flash.c ****  * Command to erase UCB sector which is starting with the specified address
+ 335:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+ 336:../Libraries/XMCLib/src/xmc4_flash.c **** void XMC_FLASH_EraseUCB(uint32_t *ucb_sector_start_address)
+ 337:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 1141              	 .loc 1 337 0
+ 1142              	 .cfi_startproc
+ 1143              	 
+ 1144              	 
+ 1145              	 
+ 1146 0000 80B4     	 push {r7}
+ 1147              	.LCFI95:
+ 1148              	 .cfi_def_cfa_offset 4
+ 1149              	 .cfi_offset 7,-4
+ 1150 0002 85B0     	 sub sp,sp,#20
+ 1151              	.LCFI96:
+ 1152              	 .cfi_def_cfa_offset 24
+ 1153 0004 00AF     	 add r7,sp,#0
+ 1154              	.LCFI97:
+ 1155              	 .cfi_def_cfa_register 7
+ 1156 0006 7860     	 str r0,[r7,#4]
+ 338:../Libraries/XMCLib/src/xmc4_flash.c ****   volatile uint32_t *address;
+ 339:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 340:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5554U);
+ 1157              	 .loc 1 340 0
+ 1158 0008 114B     	 ldr r3,.L49
+ 1159 000a FB60     	 str r3,[r7,#12]
+ 341:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0xaaU;
+ 1160              	 .loc 1 341 0
+ 1161 000c FB68     	 ldr r3,[r7,#12]
+ 1162 000e AA22     	 movs r2,#170
+ 1163 0010 1A60     	 str r2,[r3]
+ 342:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0xaaa8U);
+ 1164              	 .loc 1 342 0
+ 1165 0012 104B     	 ldr r3,.L49+4
+ 1166 0014 FB60     	 str r3,[r7,#12]
+ 343:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x55U;
+ 1167              	 .loc 1 343 0
+ 1168 0016 FB68     	 ldr r3,[r7,#12]
+ 1169 0018 5522     	 movs r2,#85
+ 1170 001a 1A60     	 str r2,[r3]
+ 344:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5554U);
+ 1171              	 .loc 1 344 0
+ 1172 001c 0C4B     	 ldr r3,.L49
+ 1173 001e FB60     	 str r3,[r7,#12]
+ 345:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x80U;
+ 1174              	 .loc 1 345 0
+ 1175 0020 FB68     	 ldr r3,[r7,#12]
+ 1176 0022 8022     	 movs r2,#128
+ 1177 0024 1A60     	 str r2,[r3]
+ 346:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5554U);
+ 1178              	 .loc 1 346 0
+ 1179 0026 0A4B     	 ldr r3,.L49
+ 1180 0028 FB60     	 str r3,[r7,#12]
+ 347:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0xaaU;
+ 1181              	 .loc 1 347 0
+ 1182 002a FB68     	 ldr r3,[r7,#12]
+ 1183 002c AA22     	 movs r2,#170
+ 1184 002e 1A60     	 str r2,[r3]
+ 348:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0xaaa8U);
+ 1185              	 .loc 1 348 0
+ 1186 0030 084B     	 ldr r3,.L49+4
+ 1187 0032 FB60     	 str r3,[r7,#12]
+ 349:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x55U;
+ 1188              	 .loc 1 349 0
+ 1189 0034 FB68     	 ldr r3,[r7,#12]
+ 1190 0036 5522     	 movs r2,#85
+ 1191 0038 1A60     	 str r2,[r3]
+ 350:../Libraries/XMCLib/src/xmc4_flash.c ****   address = ucb_sector_start_address;
+ 1192              	 .loc 1 350 0
+ 1193 003a 7B68     	 ldr r3,[r7,#4]
+ 1194 003c FB60     	 str r3,[r7,#12]
+ 351:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0xc0U;
+ 1195              	 .loc 1 351 0
+ 1196 003e FB68     	 ldr r3,[r7,#12]
+ 1197 0040 C022     	 movs r2,#192
+ 1198 0042 1A60     	 str r2,[r3]
+ 352:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 1199              	 .loc 1 352 0
+ 1200 0044 1437     	 adds r7,r7,#20
+ 1201              	.LCFI98:
+ 1202              	 .cfi_def_cfa_offset 4
+ 1203 0046 BD46     	 mov sp,r7
+ 1204              	.LCFI99:
+ 1205              	 .cfi_def_cfa_register 13
+ 1206              	 
+ 1207 0048 5DF8047B 	 ldr r7,[sp],#4
+ 1208              	.LCFI100:
+ 1209              	 .cfi_restore 7
+ 1210              	 .cfi_def_cfa_offset 0
+ 1211 004c 7047     	 bx lr
+ 1212              	.L50:
+ 1213 004e 00BF     	 .align 2
+ 1214              	.L49:
+ 1215 0050 5455000C 	 .word 201348436
+ 1216 0054 A8AA000C 	 .word 201370280
+ 1217              	 .cfi_endproc
+ 1218              	.LFE160:
+ 1220              	 .section .text.XMC_FLASH_Reset,"ax",%progbits
+ 1221              	 .align 2
+ 1222              	 .global XMC_FLASH_Reset
+ 1223              	 .thumb
+ 1224              	 .thumb_func
+ 1226              	XMC_FLASH_Reset:
+ 1227              	.LFB161:
+ 353:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 354:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+ 355:../Libraries/XMCLib/src/xmc4_flash.c ****  * Command to reset the status of the PFLASH
+ 356:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+ 357:../Libraries/XMCLib/src/xmc4_flash.c **** void XMC_FLASH_Reset(void)
+ 358:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 1228              	 .loc 1 358 0
+ 1229              	 .cfi_startproc
+ 1230              	 
+ 1231              	 
+ 1232              	 
+ 1233 0000 80B4     	 push {r7}
+ 1234              	.LCFI101:
+ 1235              	 .cfi_def_cfa_offset 4
+ 1236              	 .cfi_offset 7,-4
+ 1237 0002 83B0     	 sub sp,sp,#12
+ 1238              	.LCFI102:
+ 1239              	 .cfi_def_cfa_offset 16
+ 1240 0004 00AF     	 add r7,sp,#0
+ 1241              	.LCFI103:
+ 1242              	 .cfi_def_cfa_register 7
+ 359:../Libraries/XMCLib/src/xmc4_flash.c ****   volatile uint32_t *address;
+ 360:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 361:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5554U);
+ 1243              	 .loc 1 361 0
+ 1244 0006 054B     	 ldr r3,.L52
+ 1245 0008 7B60     	 str r3,[r7,#4]
+ 362:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0xf0U;
+ 1246              	 .loc 1 362 0
+ 1247 000a 7B68     	 ldr r3,[r7,#4]
+ 1248 000c F022     	 movs r2,#240
+ 1249 000e 1A60     	 str r2,[r3]
+ 363:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 1250              	 .loc 1 363 0
+ 1251 0010 0C37     	 adds r7,r7,#12
+ 1252              	.LCFI104:
+ 1253              	 .cfi_def_cfa_offset 4
+ 1254 0012 BD46     	 mov sp,r7
+ 1255              	.LCFI105:
+ 1256              	 .cfi_def_cfa_register 13
+ 1257              	 
+ 1258 0014 5DF8047B 	 ldr r7,[sp],#4
+ 1259              	.LCFI106:
+ 1260              	 .cfi_restore 7
+ 1261              	 .cfi_def_cfa_offset 0
+ 1262 0018 7047     	 bx lr
+ 1263              	.L53:
+ 1264 001a 00BF     	 .align 2
+ 1265              	.L52:
+ 1266 001c 5455000C 	 .word 201348436
+ 1267              	 .cfi_endproc
+ 1268              	.LFE161:
+ 1270              	 .section .text.XMC_FLASH_InstallProtection,"ax",%progbits
+ 1271              	 .align 2
+ 1272              	 .global XMC_FLASH_InstallProtection
+ 1273              	 .thumb
+ 1274              	 .thumb_func
+ 1276              	XMC_FLASH_InstallProtection:
+ 1277              	.LFB162:
+ 364:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 365:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+ 366:../Libraries/XMCLib/src/xmc4_flash.c ****  * This API install the global read and sector write protection for the specified user
+ 367:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+ 368:../Libraries/XMCLib/src/xmc4_flash.c **** void XMC_FLASH_InstallProtection(uint8_t user,
+ 369:../Libraries/XMCLib/src/xmc4_flash.c ****                                  uint32_t protection_mask,
+ 370:../Libraries/XMCLib/src/xmc4_flash.c **** 	                             uint32_t password_0,
+ 371:../Libraries/XMCLib/src/xmc4_flash.c ****                                  uint32_t password_1)
+ 372:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 1278              	 .loc 1 372 0
+ 1279              	 .cfi_startproc
+ 1280              	 
+ 1281              	 
+ 1282 0000 80B5     	 push {r7,lr}
+ 1283              	.LCFI107:
+ 1284              	 .cfi_def_cfa_offset 8
+ 1285              	 .cfi_offset 7,-8
+ 1286              	 .cfi_offset 14,-4
+ 1287 0002 86B0     	 sub sp,sp,#24
+ 1288              	.LCFI108:
+ 1289              	 .cfi_def_cfa_offset 32
+ 1290 0004 00AF     	 add r7,sp,#0
+ 1291              	.LCFI109:
+ 1292              	 .cfi_def_cfa_register 7
+ 1293 0006 B960     	 str r1,[r7,#8]
+ 1294 0008 7A60     	 str r2,[r7,#4]
+ 1295 000a 3B60     	 str r3,[r7]
+ 1296 000c 0346     	 mov r3,r0
+ 1297 000e FB73     	 strb r3,[r7,#15]
+ 373:../Libraries/XMCLib/src/xmc4_flash.c ****   uint32_t index; 
+ 374:../Libraries/XMCLib/src/xmc4_flash.c ****   
+ 375:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_ASSERT(" XMC_FLASH_ConfigureProtection: User level out of range", (user < 3U));
+ 376:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 377:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lEnterPageModeCommand();
+ 1298              	 .loc 1 377 0
+ 1299 0010 FFF7FEFF 	 bl XMC_FLASH_lEnterPageModeCommand
+ 378:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 379:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lLoadPageCommand(protection_mask, 0UL);
+ 1300              	 .loc 1 379 0
+ 1301 0014 B868     	 ldr r0,[r7,#8]
+ 1302 0016 0021     	 movs r1,#0
+ 1303 0018 FFF7FEFF 	 bl XMC_FLASH_lLoadPageCommand
+ 380:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lLoadPageCommand(protection_mask, 0UL);
+ 1304              	 .loc 1 380 0
+ 1305 001c B868     	 ldr r0,[r7,#8]
+ 1306 001e 0021     	 movs r1,#0
+ 1307 0020 FFF7FEFF 	 bl XMC_FLASH_lLoadPageCommand
+ 381:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lLoadPageCommand(password_0, password_1);
+ 1308              	 .loc 1 381 0
+ 1309 0024 7868     	 ldr r0,[r7,#4]
+ 1310 0026 3968     	 ldr r1,[r7]
+ 1311 0028 FFF7FEFF 	 bl XMC_FLASH_lLoadPageCommand
+ 382:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lLoadPageCommand(password_0, password_1);
+ 1312              	 .loc 1 382 0
+ 1313 002c 7868     	 ldr r0,[r7,#4]
+ 1314 002e 3968     	 ldr r1,[r7]
+ 1315 0030 FFF7FEFF 	 bl XMC_FLASH_lLoadPageCommand
+ 383:../Libraries/XMCLib/src/xmc4_flash.c ****   
+ 384:../Libraries/XMCLib/src/xmc4_flash.c ****   for (index = 0; index < (XMC_FLASH_WORDS_PER_PAGE - XMC_FLASH_PROTECTION_CONFIGURATION_WORDS); in
+ 1316              	 .loc 1 384 0
+ 1317 0034 0023     	 movs r3,#0
+ 1318 0036 7B61     	 str r3,[r7,#20]
+ 1319 0038 06E0     	 b .L55
+ 1320              	.L56:
+ 385:../Libraries/XMCLib/src/xmc4_flash.c ****   {
+ 386:../Libraries/XMCLib/src/xmc4_flash.c ****     XMC_FLASH_lLoadPageCommand(0UL, 0UL);
+ 1321              	 .loc 1 386 0 discriminator 3
+ 1322 003a 0020     	 movs r0,#0
+ 1323 003c 0021     	 movs r1,#0
+ 1324 003e FFF7FEFF 	 bl XMC_FLASH_lLoadPageCommand
+ 384:../Libraries/XMCLib/src/xmc4_flash.c ****   {
+ 1325              	 .loc 1 384 0 discriminator 3
+ 1326 0042 7B69     	 ldr r3,[r7,#20]
+ 1327 0044 0233     	 adds r3,r3,#2
+ 1328 0046 7B61     	 str r3,[r7,#20]
+ 1329              	.L55:
+ 384:../Libraries/XMCLib/src/xmc4_flash.c ****   {
+ 1330              	 .loc 1 384 0 is_stmt 0 discriminator 1
+ 1331 0048 7B69     	 ldr r3,[r7,#20]
+ 1332 004a 372B     	 cmp r3,#55
+ 1333 004c F5D9     	 bls .L56
+ 387:../Libraries/XMCLib/src/xmc4_flash.c ****   }
+ 388:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 389:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lWriteUCBPageCommand((uint32_t *)((uint32_t)XMC_FLASH_UCB0 + (user * XMC_FLASH_BYTES_PE
+ 1334              	 .loc 1 389 0 is_stmt 1
+ 1335 004e FB7B     	 ldrb r3,[r7,#15]
+ 1336 0050 03F54033 	 add r3,r3,#196608
+ 1337 0054 9B02     	 lsls r3,r3,#10
+ 1338 0056 1846     	 mov r0,r3
+ 1339 0058 FFF7FEFF 	 bl XMC_FLASH_lWriteUCBPageCommand
+ 390:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 1340              	 .loc 1 390 0
+ 1341 005c 1837     	 adds r7,r7,#24
+ 1342              	.LCFI110:
+ 1343              	 .cfi_def_cfa_offset 8
+ 1344 005e BD46     	 mov sp,r7
+ 1345              	.LCFI111:
+ 1346              	 .cfi_def_cfa_register 13
+ 1347              	 
+ 1348 0060 80BD     	 pop {r7,pc}
+ 1349              	 .cfi_endproc
+ 1350              	.LFE162:
+ 1352 0062 00BF     	 .section .text.XMC_FLASH_ConfirmProtection,"ax",%progbits
+ 1353              	 .align 2
+ 1354              	 .global XMC_FLASH_ConfirmProtection
+ 1355              	 .thumb
+ 1356              	 .thumb_func
+ 1358              	XMC_FLASH_ConfirmProtection:
+ 1359              	.LFB163:
+ 391:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 392:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+ 393:../Libraries/XMCLib/src/xmc4_flash.c ****  * This API confirm the protection. So that This sectors are locked with the specified protection.
+ 394:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+ 395:../Libraries/XMCLib/src/xmc4_flash.c **** void XMC_FLASH_ConfirmProtection(uint8_t user)
+ 396:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 1360              	 .loc 1 396 0
+ 1361              	 .cfi_startproc
+ 1362              	 
+ 1363              	 
+ 1364 0000 80B5     	 push {r7,lr}
+ 1365              	.LCFI112:
+ 1366              	 .cfi_def_cfa_offset 8
+ 1367              	 .cfi_offset 7,-8
+ 1368              	 .cfi_offset 14,-4
+ 1369 0002 84B0     	 sub sp,sp,#16
+ 1370              	.LCFI113:
+ 1371              	 .cfi_def_cfa_offset 24
+ 1372 0004 00AF     	 add r7,sp,#0
+ 1373              	.LCFI114:
+ 1374              	 .cfi_def_cfa_register 7
+ 1375 0006 0346     	 mov r3,r0
+ 1376 0008 FB71     	 strb r3,[r7,#7]
+ 397:../Libraries/XMCLib/src/xmc4_flash.c ****   uint32_t index;
+ 398:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 399:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_ASSERT(" XMC_FLASH_ConfirmProtection: User level out of range", (user < 3U));
+ 400:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 401:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lEnterPageModeCommand();
+ 1377              	 .loc 1 401 0
+ 1378 000a FFF7FEFF 	 bl XMC_FLASH_lEnterPageModeCommand
+ 402:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 403:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lLoadPageCommand(XMC_FLASH_PROTECTION_CONFIRMATION_CODE, 0U);
+ 1379              	 .loc 1 403 0
+ 1380 000e 1048     	 ldr r0,.L60
+ 1381 0010 0021     	 movs r1,#0
+ 1382 0012 FFF7FEFF 	 bl XMC_FLASH_lLoadPageCommand
+ 404:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lLoadPageCommand(XMC_FLASH_PROTECTION_CONFIRMATION_CODE, 0U);
+ 1383              	 .loc 1 404 0
+ 1384 0016 0E48     	 ldr r0,.L60
+ 1385 0018 0021     	 movs r1,#0
+ 1386 001a FFF7FEFF 	 bl XMC_FLASH_lLoadPageCommand
+ 405:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 406:../Libraries/XMCLib/src/xmc4_flash.c ****   /* Fill the rest of page buffer with zeros*/
+ 407:../Libraries/XMCLib/src/xmc4_flash.c ****   for (index = 0UL; index < (XMC_FLASH_WORDS_PER_PAGE - XMC_FLASH_PROTECTION_CONFIRMATION_WORDS); i
+ 1387              	 .loc 1 407 0
+ 1388 001e 0023     	 movs r3,#0
+ 1389 0020 FB60     	 str r3,[r7,#12]
+ 1390 0022 06E0     	 b .L58
+ 1391              	.L59:
+ 408:../Libraries/XMCLib/src/xmc4_flash.c ****   {
+ 409:../Libraries/XMCLib/src/xmc4_flash.c ****     XMC_FLASH_lLoadPageCommand(0UL, 0UL);
+ 1392              	 .loc 1 409 0 discriminator 3
+ 1393 0024 0020     	 movs r0,#0
+ 1394 0026 0021     	 movs r1,#0
+ 1395 0028 FFF7FEFF 	 bl XMC_FLASH_lLoadPageCommand
+ 407:../Libraries/XMCLib/src/xmc4_flash.c ****   {
+ 1396              	 .loc 1 407 0 discriminator 3
+ 1397 002c FB68     	 ldr r3,[r7,#12]
+ 1398 002e 0233     	 adds r3,r3,#2
+ 1399 0030 FB60     	 str r3,[r7,#12]
+ 1400              	.L58:
+ 407:../Libraries/XMCLib/src/xmc4_flash.c ****   {
+ 1401              	 .loc 1 407 0 is_stmt 0 discriminator 1
+ 1402 0032 FB68     	 ldr r3,[r7,#12]
+ 1403 0034 3B2B     	 cmp r3,#59
+ 1404 0036 F5D9     	 bls .L59
+ 410:../Libraries/XMCLib/src/xmc4_flash.c ****   }
+ 411:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 412:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lWriteUCBPageCommand((uint32_t *)((uint32_t)XMC_FLASH_UCB0 + 
+ 1405              	 .loc 1 412 0 is_stmt 1
+ 1406 0038 FB79     	 ldrb r3,[r7,#7]
+ 1407 003a 03F54033 	 add r3,r3,#196608
+ 1408 003e 9B02     	 lsls r3,r3,#10
+ 413:../Libraries/XMCLib/src/xmc4_flash.c ****                                  (user * XMC_FLASH_BYTES_PER_UCB) + XMC_FLASH_PROTECTION_CONFIRMATI
+ 1409              	 .loc 1 413 0
+ 1410 0040 03F50073 	 add r3,r3,#512
+ 412:../Libraries/XMCLib/src/xmc4_flash.c ****                                  (user * XMC_FLASH_BYTES_PER_UCB) + XMC_FLASH_PROTECTION_CONFIRMATI
+ 1411              	 .loc 1 412 0
+ 1412 0044 1846     	 mov r0,r3
+ 1413 0046 FFF7FEFF 	 bl XMC_FLASH_lWriteUCBPageCommand
+ 414:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 1414              	 .loc 1 414 0
+ 1415 004a 1037     	 adds r7,r7,#16
+ 1416              	.LCFI115:
+ 1417              	 .cfi_def_cfa_offset 8
+ 1418 004c BD46     	 mov sp,r7
+ 1419              	.LCFI116:
+ 1420              	 .cfi_def_cfa_register 13
+ 1421              	 
+ 1422 004e 80BD     	 pop {r7,pc}
+ 1423              	.L61:
+ 1424              	 .align 2
+ 1425              	.L60:
+ 1426 0050 C315FE8A 	 .word -1963059773
+ 1427              	 .cfi_endproc
+ 1428              	.LFE163:
+ 1430              	 .section .text.XMC_FLASH_VerifyReadProtection,"ax",%progbits
+ 1431              	 .align 2
+ 1432              	 .global XMC_FLASH_VerifyReadProtection
+ 1433              	 .thumb
+ 1434              	 .thumb_func
+ 1436              	XMC_FLASH_VerifyReadProtection:
+ 1437              	.LFB164:
+ 415:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 416:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+ 417:../Libraries/XMCLib/src/xmc4_flash.c ****  * This API verify read protection configuration. And returns true if passwords are matching.
+ 418:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+ 419:../Libraries/XMCLib/src/xmc4_flash.c **** bool XMC_FLASH_VerifyReadProtection(uint32_t password_0, uint32_t password_1)
+ 420:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 1438              	 .loc 1 420 0
+ 1439              	 .cfi_startproc
+ 1440              	 
+ 1441              	 
+ 1442 0000 80B5     	 push {r7,lr}
+ 1443              	.LCFI117:
+ 1444              	 .cfi_def_cfa_offset 8
+ 1445              	 .cfi_offset 7,-8
+ 1446              	 .cfi_offset 14,-4
+ 1447 0002 82B0     	 sub sp,sp,#8
+ 1448              	.LCFI118:
+ 1449              	 .cfi_def_cfa_offset 16
+ 1450 0004 00AF     	 add r7,sp,#0
+ 1451              	.LCFI119:
+ 1452              	 .cfi_def_cfa_register 7
+ 1453 0006 7860     	 str r0,[r7,#4]
+ 1454 0008 3960     	 str r1,[r7]
+ 421:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lClearStatusCommand();
+ 1455              	 .loc 1 421 0
+ 1456 000a FFF7FEFF 	 bl XMC_FLASH_lClearStatusCommand
+ 422:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lDisableReadProtectionCommand(password_0, password_1);
+ 1457              	 .loc 1 422 0
+ 1458 000e 7868     	 ldr r0,[r7,#4]
+ 1459 0010 3968     	 ldr r1,[r7]
+ 1460 0012 FFF7FEFF 	 bl XMC_FLASH_lDisableReadProtectionCommand
+ 423:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 424:../Libraries/XMCLib/src/xmc4_flash.c ****   return (bool)((XMC_FLASH_GetStatus() & XMC_FLASH_STATUS_READ_PROTECTION_INSTALLED) && 
+ 1461              	 .loc 1 424 0
+ 1462 0016 FFF7FEFF 	 bl XMC_FLASH_GetStatus
+ 1463 001a 0346     	 mov r3,r0
+ 1464 001c 03F48023 	 and r3,r3,#262144
+ 1465 0020 002B     	 cmp r3,#0
+ 1466 0022 09D0     	 beq .L63
+ 425:../Libraries/XMCLib/src/xmc4_flash.c ****                 (FLASH0->PROCON0 & XMC_FLASH_PROTECTION_READ_GLOBAL));
+ 1467              	 .loc 1 425 0 discriminator 1
+ 1468 0024 084B     	 ldr r3,.L66
+ 1469 0026 03F58153 	 add r3,r3,#4128
+ 1470 002a 1B68     	 ldr r3,[r3]
+ 1471 002c 03F40043 	 and r3,r3,#32768
+ 424:../Libraries/XMCLib/src/xmc4_flash.c ****                 (FLASH0->PROCON0 & XMC_FLASH_PROTECTION_READ_GLOBAL));
+ 1472              	 .loc 1 424 0 discriminator 1
+ 1473 0030 002B     	 cmp r3,#0
+ 1474 0032 01D0     	 beq .L63
+ 424:../Libraries/XMCLib/src/xmc4_flash.c ****                 (FLASH0->PROCON0 & XMC_FLASH_PROTECTION_READ_GLOBAL));
+ 1475              	 .loc 1 424 0 is_stmt 0 discriminator 3
+ 1476 0034 0123     	 movs r3,#1
+ 1477 0036 00E0     	 b .L64
+ 1478              	.L63:
+ 424:../Libraries/XMCLib/src/xmc4_flash.c ****                 (FLASH0->PROCON0 & XMC_FLASH_PROTECTION_READ_GLOBAL));
+ 1479              	 .loc 1 424 0 discriminator 4
+ 1480 0038 0023     	 movs r3,#0
+ 1481              	.L64:
+ 424:../Libraries/XMCLib/src/xmc4_flash.c ****                 (FLASH0->PROCON0 & XMC_FLASH_PROTECTION_READ_GLOBAL));
+ 1482              	 .loc 1 424 0 discriminator 6
+ 1483 003a 03F00103 	 and r3,r3,#1
+ 1484 003e DBB2     	 uxtb r3,r3
+ 426:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 1485              	 .loc 1 426 0 is_stmt 1 discriminator 6
+ 1486 0040 1846     	 mov r0,r3
+ 1487 0042 0837     	 adds r7,r7,#8
+ 1488              	.LCFI120:
+ 1489              	 .cfi_def_cfa_offset 8
+ 1490 0044 BD46     	 mov sp,r7
+ 1491              	.LCFI121:
+ 1492              	 .cfi_def_cfa_register 13
+ 1493              	 
+ 1494 0046 80BD     	 pop {r7,pc}
+ 1495              	.L67:
+ 1496              	 .align 2
+ 1497              	.L66:
+ 1498 0048 00100058 	 .word 1476399104
+ 1499              	 .cfi_endproc
+ 1500              	.LFE164:
+ 1502              	 .section .text.XMC_FLASH_VerifyWriteProtection,"ax",%progbits
+ 1503              	 .align 2
+ 1504              	 .global XMC_FLASH_VerifyWriteProtection
+ 1505              	 .thumb
+ 1506              	 .thumb_func
+ 1508              	XMC_FLASH_VerifyWriteProtection:
+ 1509              	.LFB165:
+ 427:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 428:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+ 429:../Libraries/XMCLib/src/xmc4_flash.c ****  * This API verify sector write protection configuration. And returns true if passwords are matchin
+ 430:../Libraries/XMCLib/src/xmc4_flash.c ****  * specified user.
+ 431:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+ 432:../Libraries/XMCLib/src/xmc4_flash.c **** bool XMC_FLASH_VerifyWriteProtection(uint32_t user,
+ 433:../Libraries/XMCLib/src/xmc4_flash.c ****                                      uint32_t protection_mask, 
+ 434:../Libraries/XMCLib/src/xmc4_flash.c ****                                      uint32_t password_0, 
+ 435:../Libraries/XMCLib/src/xmc4_flash.c ****                                      uint32_t password_1)
+ 436:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 1510              	 .loc 1 436 0
+ 1511              	 .cfi_startproc
+ 1512              	 
+ 1513              	 
+ 1514 0000 80B5     	 push {r7,lr}
+ 1515              	.LCFI122:
+ 1516              	 .cfi_def_cfa_offset 8
+ 1517              	 .cfi_offset 7,-8
+ 1518              	 .cfi_offset 14,-4
+ 1519 0002 86B0     	 sub sp,sp,#24
+ 1520              	.LCFI123:
+ 1521              	 .cfi_def_cfa_offset 32
+ 1522 0004 00AF     	 add r7,sp,#0
+ 1523              	.LCFI124:
+ 1524              	 .cfi_def_cfa_register 7
+ 1525 0006 F860     	 str r0,[r7,#12]
+ 1526 0008 B960     	 str r1,[r7,#8]
+ 1527 000a 7A60     	 str r2,[r7,#4]
+ 1528 000c 3B60     	 str r3,[r7]
+ 437:../Libraries/XMCLib/src/xmc4_flash.c ****   uint32_t *flash_procon_ptr;
+ 438:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 439:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_ASSERT(" XMC_FLASH_VerifyWriteProtection: User level out of range", (user < 3U));
+ 440:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 441:../Libraries/XMCLib/src/xmc4_flash.c ****   flash_procon_ptr = (uint32_t *)(&(FLASH0->PROCON0) + user);
+ 1529              	 .loc 1 441 0
+ 1530 000e FB68     	 ldr r3,[r7,#12]
+ 1531 0010 9A00     	 lsls r2,r3,#2
+ 1532 0012 134B     	 ldr r3,.L72
+ 1533 0014 1344     	 add r3,r3,r2
+ 1534 0016 7B61     	 str r3,[r7,#20]
+ 442:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 443:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lClearStatusCommand();
+ 1535              	 .loc 1 443 0
+ 1536 0018 FFF7FEFF 	 bl XMC_FLASH_lClearStatusCommand
+ 444:../Libraries/XMCLib/src/xmc4_flash.c ****   XMC_FLASH_lDisableSectorWriteProtectionCommand(user, password_0, password_1);
+ 1537              	 .loc 1 444 0
+ 1538 001c F868     	 ldr r0,[r7,#12]
+ 1539 001e 7968     	 ldr r1,[r7,#4]
+ 1540 0020 3A68     	 ldr r2,[r7]
+ 1541 0022 FFF7FEFF 	 bl XMC_FLASH_lDisableSectorWriteProtectionCommand
+ 445:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 446:../Libraries/XMCLib/src/xmc4_flash.c ****   return (bool)((XMC_FLASH_GetStatus() & (1U << (FLASH_FSR_WPRODIS0_Pos + user))) && 
+ 1542              	 .loc 1 446 0
+ 1543 0026 FFF7FEFF 	 bl XMC_FLASH_GetStatus
+ 1544 002a 0246     	 mov r2,r0
+ 1545 002c FB68     	 ldr r3,[r7,#12]
+ 1546 002e 1933     	 adds r3,r3,#25
+ 1547 0030 1946     	 mov r1,r3
+ 1548 0032 0123     	 movs r3,#1
+ 1549 0034 8B40     	 lsls r3,r3,r1
+ 1550 0036 1340     	 ands r3,r3,r2
+ 1551 0038 002B     	 cmp r3,#0
+ 1552 003a 08D0     	 beq .L69
+ 447:../Libraries/XMCLib/src/xmc4_flash.c ****                  (*flash_procon_ptr == (protection_mask & ~XMC_FLASH_PROTECTION_READ_GLOBAL)));
+ 1553              	 .loc 1 447 0 discriminator 1
+ 1554 003c 7B69     	 ldr r3,[r7,#20]
+ 1555 003e 1A68     	 ldr r2,[r3]
+ 1556 0040 BB68     	 ldr r3,[r7,#8]
+ 1557 0042 23F40043 	 bic r3,r3,#32768
+ 446:../Libraries/XMCLib/src/xmc4_flash.c ****                  (*flash_procon_ptr == (protection_mask & ~XMC_FLASH_PROTECTION_READ_GLOBAL)));
+ 1558              	 .loc 1 446 0 discriminator 1
+ 1559 0046 9A42     	 cmp r2,r3
+ 1560 0048 01D1     	 bne .L69
+ 446:../Libraries/XMCLib/src/xmc4_flash.c ****                  (*flash_procon_ptr == (protection_mask & ~XMC_FLASH_PROTECTION_READ_GLOBAL)));
+ 1561              	 .loc 1 446 0 is_stmt 0 discriminator 3
+ 1562 004a 0123     	 movs r3,#1
+ 1563 004c 00E0     	 b .L70
+ 1564              	.L69:
+ 446:../Libraries/XMCLib/src/xmc4_flash.c ****                  (*flash_procon_ptr == (protection_mask & ~XMC_FLASH_PROTECTION_READ_GLOBAL)));
+ 1565              	 .loc 1 446 0 discriminator 4
+ 1566 004e 0023     	 movs r3,#0
+ 1567              	.L70:
+ 446:../Libraries/XMCLib/src/xmc4_flash.c ****                  (*flash_procon_ptr == (protection_mask & ~XMC_FLASH_PROTECTION_READ_GLOBAL)));
+ 1568              	 .loc 1 446 0 discriminator 6
+ 1569 0050 03F00103 	 and r3,r3,#1
+ 1570 0054 DBB2     	 uxtb r3,r3
+ 448:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 1571              	 .loc 1 448 0 is_stmt 1 discriminator 6
+ 1572 0056 1846     	 mov r0,r3
+ 1573 0058 1837     	 adds r7,r7,#24
+ 1574              	.LCFI125:
+ 1575              	 .cfi_def_cfa_offset 8
+ 1576 005a BD46     	 mov sp,r7
+ 1577              	.LCFI126:
+ 1578              	 .cfi_def_cfa_register 13
+ 1579              	 
+ 1580 005c 80BD     	 pop {r7,pc}
+ 1581              	.L73:
+ 1582 005e 00BF     	 .align 2
+ 1583              	.L72:
+ 1584 0060 20200058 	 .word 1476403232
+ 1585              	 .cfi_endproc
+ 1586              	.LFE165:
+ 1588              	 .section .text.XMC_FLASH_ResumeProtection,"ax",%progbits
+ 1589              	 .align 2
+ 1590              	 .global XMC_FLASH_ResumeProtection
+ 1591              	 .thumb
+ 1592              	 .thumb_func
+ 1594              	XMC_FLASH_ResumeProtection:
+ 1595              	.LFB166:
+ 449:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 450:../Libraries/XMCLib/src/xmc4_flash.c **** /*
+ 451:../Libraries/XMCLib/src/xmc4_flash.c ****  * Command to enables the protection as it was configured
+ 452:../Libraries/XMCLib/src/xmc4_flash.c ****  */
+ 453:../Libraries/XMCLib/src/xmc4_flash.c **** void XMC_FLASH_ResumeProtection(void)
+ 454:../Libraries/XMCLib/src/xmc4_flash.c **** {
+ 1596              	 .loc 1 454 0
+ 1597              	 .cfi_startproc
+ 1598              	 
+ 1599              	 
+ 1600              	 
+ 1601 0000 80B4     	 push {r7}
+ 1602              	.LCFI127:
+ 1603              	 .cfi_def_cfa_offset 4
+ 1604              	 .cfi_offset 7,-4
+ 1605 0002 83B0     	 sub sp,sp,#12
+ 1606              	.LCFI128:
+ 1607              	 .cfi_def_cfa_offset 16
+ 1608 0004 00AF     	 add r7,sp,#0
+ 1609              	.LCFI129:
+ 1610              	 .cfi_def_cfa_register 7
+ 455:../Libraries/XMCLib/src/xmc4_flash.c ****   volatile uint32_t *address;
+ 456:../Libraries/XMCLib/src/xmc4_flash.c **** 
+ 457:../Libraries/XMCLib/src/xmc4_flash.c ****   address = (uint32_t *)(XMC_FLASH_UNCACHED_BASE + 0x5554U);
+ 1611              	 .loc 1 457 0
+ 1612 0006 054B     	 ldr r3,.L75
+ 1613 0008 7B60     	 str r3,[r7,#4]
+ 458:../Libraries/XMCLib/src/xmc4_flash.c ****   *address = 0x5eU;
+ 1614              	 .loc 1 458 0
+ 1615 000a 7B68     	 ldr r3,[r7,#4]
+ 1616 000c 5E22     	 movs r2,#94
+ 1617 000e 1A60     	 str r2,[r3]
+ 459:../Libraries/XMCLib/src/xmc4_flash.c **** }
+ 1618              	 .loc 1 459 0
+ 1619 0010 0C37     	 adds r7,r7,#12
+ 1620              	.LCFI130:
+ 1621              	 .cfi_def_cfa_offset 4
+ 1622 0012 BD46     	 mov sp,r7
+ 1623              	.LCFI131:
+ 1624              	 .cfi_def_cfa_register 13
+ 1625              	 
+ 1626 0014 5DF8047B 	 ldr r7,[sp],#4
+ 1627              	.LCFI132:
+ 1628              	 .cfi_restore 7
+ 1629              	 .cfi_def_cfa_offset 0
+ 1630 0018 7047     	 bx lr
+ 1631              	.L76:
+ 1632 001a 00BF     	 .align 2
+ 1633              	.L75:
+ 1634 001c 5455000C 	 .word 201348436
+ 1635              	 .cfi_endproc
+ 1636              	.LFE166:
+ 1638              	 .text
+ 1639              	.Letext0:
+ 1640              	 .file 2 "d:\\dave-4.1.2\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 1641              	 .file 3 "d:\\dave-4.1.2\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+ 1642              	 .file 4 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex/Libraries/CMSIS/Infineon/XMC4500_series/Include/XMC4500.h"
+ 1643              	 .file 5 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex\\Libraries\\XMCLib\\inc/xmc4_flash.h"
+ 1644              	 .file 6 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex/Libraries/CMSIS/Include/core_cm4.h"
+DEFINED SYMBOLS
+                            *ABS*:00000000 xmc4_flash.c
+    {standard input}:20     .text.XMC_FLASH_lEnterPageModeCommand:00000000 $t
+    {standard input}:25     .text.XMC_FLASH_lEnterPageModeCommand:00000000 XMC_FLASH_lEnterPageModeCommand
+    {standard input}:66     .text.XMC_FLASH_lEnterPageModeCommand:0000001c $d
+    {standard input}:71     .text.XMC_FLASH_lLoadPageCommand:00000000 $t
+    {standard input}:76     .text.XMC_FLASH_lLoadPageCommand:00000000 XMC_FLASH_lLoadPageCommand
+    {standard input}:125    .text.XMC_FLASH_lLoadPageCommand:00000028 $d
+    {standard input}:131    .text.XMC_FLASH_lWritePageCommand:00000000 $t
+    {standard input}:136    .text.XMC_FLASH_lWritePageCommand:00000000 XMC_FLASH_lWritePageCommand
+    {standard input}:198    .text.XMC_FLASH_lWritePageCommand:0000003c $d
+    {standard input}:204    .text.XMC_FLASH_lWriteUCBPageCommand:00000000 $t
+    {standard input}:209    .text.XMC_FLASH_lWriteUCBPageCommand:00000000 XMC_FLASH_lWriteUCBPageCommand
+    {standard input}:271    .text.XMC_FLASH_lWriteUCBPageCommand:0000003c $d
+    {standard input}:277    .text.XMC_FLASH_lEraseSectorCommand:00000000 $t
+    {standard input}:282    .text.XMC_FLASH_lEraseSectorCommand:00000000 XMC_FLASH_lEraseSectorCommand
+    {standard input}:358    .text.XMC_FLASH_lEraseSectorCommand:00000050 $d
+    {standard input}:364    .text.XMC_FLASH_lDisableSectorWriteProtectionCommand:00000000 $t
+    {standard input}:369    .text.XMC_FLASH_lDisableSectorWriteProtectionCommand:00000000 XMC_FLASH_lDisableSectorWriteProtectionCommand
+    {standard input}:447    .text.XMC_FLASH_lDisableSectorWriteProtectionCommand:00000054 $d
+    {standard input}:455    .text.XMC_FLASH_lDisableReadProtectionCommand:00000000 $t
+    {standard input}:460    .text.XMC_FLASH_lDisableReadProtectionCommand:00000000 XMC_FLASH_lDisableReadProtectionCommand
+    {standard input}:537    .text.XMC_FLASH_lDisableReadProtectionCommand:00000050 $d
+    {standard input}:545    .text.XMC_FLASH_lClearStatusCommand:00000000 $t
+    {standard input}:550    .text.XMC_FLASH_lClearStatusCommand:00000000 XMC_FLASH_lClearStatusCommand
+    {standard input}:590    .text.XMC_FLASH_lClearStatusCommand:0000001c $d
+    {standard input}:595    .text.XMC_FLASH_ClearStatus:00000000 $t
+    {standard input}:600    .text.XMC_FLASH_ClearStatus:00000000 XMC_FLASH_ClearStatus
+    {standard input}:622    .text.XMC_FLASH_GetStatus:00000000 $t
+    {standard input}:627    .text.XMC_FLASH_GetStatus:00000000 XMC_FLASH_GetStatus
+    {standard input}:660    .text.XMC_FLASH_GetStatus:00000018 $d
+    {standard input}:665    .text.XMC_FLASH_EnableEvent:00000000 $t
+    {standard input}:670    .text.XMC_FLASH_EnableEvent:00000000 XMC_FLASH_EnableEvent
+    {standard input}:715    .text.XMC_FLASH_EnableEvent:0000002c $d
+    {standard input}:720    .text.XMC_FLASH_DisableEvent:00000000 $t
+    {standard input}:725    .text.XMC_FLASH_DisableEvent:00000000 XMC_FLASH_DisableEvent
+    {standard input}:771    .text.XMC_FLASH_DisableEvent:0000002c $d
+    {standard input}:776    .text.XMC_FLASH_ProgramPage:00000000 $t
+    {standard input}:781    .text.XMC_FLASH_ProgramPage:00000000 XMC_FLASH_ProgramPage
+    {standard input}:849    .text.XMC_FLASH_EraseSector:00000000 $t
+    {standard input}:854    .text.XMC_FLASH_EraseSector:00000000 XMC_FLASH_EraseSector
+    {standard input}:890    .text.XMC_FLASH_lErasePhysicalSectorCommand:00000000 $t
+    {standard input}:895    .text.XMC_FLASH_lErasePhysicalSectorCommand:00000000 XMC_FLASH_lErasePhysicalSectorCommand
+    {standard input}:971    .text.XMC_FLASH_lErasePhysicalSectorCommand:00000050 $d
+    {standard input}:977    .text.XMC_FLASH_lRepairPhysicalSectorCommand:00000000 $t
+    {standard input}:982    .text.XMC_FLASH_lRepairPhysicalSectorCommand:00000000 XMC_FLASH_lRepairPhysicalSectorCommand
+    {standard input}:1057   .text.XMC_FLASH_lRepairPhysicalSectorCommand:0000004c $d
+    {standard input}:1064   .text.XMC_FLASH_ErasePhysicalSector:00000000 $t
+    {standard input}:1069   .text.XMC_FLASH_ErasePhysicalSector:00000000 XMC_FLASH_ErasePhysicalSector
+    {standard input}:1105   .text.XMC_FLASH_RepairPhysicalSector:00000000 $t
+    {standard input}:1110   .text.XMC_FLASH_RepairPhysicalSector:00000000 XMC_FLASH_RepairPhysicalSector
+    {standard input}:1134   .text.XMC_FLASH_EraseUCB:00000000 $t
+    {standard input}:1139   .text.XMC_FLASH_EraseUCB:00000000 XMC_FLASH_EraseUCB
+    {standard input}:1215   .text.XMC_FLASH_EraseUCB:00000050 $d
+    {standard input}:1221   .text.XMC_FLASH_Reset:00000000 $t
+    {standard input}:1226   .text.XMC_FLASH_Reset:00000000 XMC_FLASH_Reset
+    {standard input}:1266   .text.XMC_FLASH_Reset:0000001c $d
+    {standard input}:1271   .text.XMC_FLASH_InstallProtection:00000000 $t
+    {standard input}:1276   .text.XMC_FLASH_InstallProtection:00000000 XMC_FLASH_InstallProtection
+    {standard input}:1353   .text.XMC_FLASH_ConfirmProtection:00000000 $t
+    {standard input}:1358   .text.XMC_FLASH_ConfirmProtection:00000000 XMC_FLASH_ConfirmProtection
+    {standard input}:1426   .text.XMC_FLASH_ConfirmProtection:00000050 $d
+    {standard input}:1431   .text.XMC_FLASH_VerifyReadProtection:00000000 $t
+    {standard input}:1436   .text.XMC_FLASH_VerifyReadProtection:00000000 XMC_FLASH_VerifyReadProtection
+    {standard input}:1498   .text.XMC_FLASH_VerifyReadProtection:00000048 $d
+    {standard input}:1503   .text.XMC_FLASH_VerifyWriteProtection:00000000 $t
+    {standard input}:1508   .text.XMC_FLASH_VerifyWriteProtection:00000000 XMC_FLASH_VerifyWriteProtection
+    {standard input}:1584   .text.XMC_FLASH_VerifyWriteProtection:00000060 $d
+    {standard input}:1589   .text.XMC_FLASH_ResumeProtection:00000000 $t
+    {standard input}:1594   .text.XMC_FLASH_ResumeProtection:00000000 XMC_FLASH_ResumeProtection
+    {standard input}:1634   .text.XMC_FLASH_ResumeProtection:0000001c $d
+                     .debug_frame:00000010 $d
+
+NO UNDEFINED SYMBOLS

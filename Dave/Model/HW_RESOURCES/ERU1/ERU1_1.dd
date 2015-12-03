@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ASCII"?>
+<ResourceModel:Peripheral xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ResourceModel="http://www.infineon.com/Davex/Resource.ecore" name="ERU1" URI="http://resources/0.1.28/peripheral/eru/1" description="Event Request Unit (ERU)" baseAddress="0x40044000">
+  <provided xsi:type="ResourceModel:ResourceGroup" name="1" URI="http://resources/0.1.28/peripheral/eru/1/ers_etl/1">
+    <upwardMapList xsi:type="ResourceModel:HWResource" href="../../APPS/EVENT_DETECTOR/v4_0_4/EVENT_DETECTOR_0.app#//@hwResources.0"/>
+    <resourcesList name="exicon" requiredResourceUri="http://resources/0.1.28/peripheral/eru/1/exicon1"/>
+    <resourcesList name="exicon_pe" requiredResourceUri="http://resources/0.1.28/peripheral/eru/1/exicon1/pe"/>
+    <resourcesList name="exicon_ocs" requiredResourceUri="http://resources/0.1.28/peripheral/eru/1/exicon1/ocs"/>
+    <resourcesList name="exisel_exsxa" requiredResourceUri="http://resources/0.1.28/peripheral/eru/1/exisel/exs1a"/>
+    <resourcesList name="exisel_exsxb" requiredResourceUri="http://resources/0.1.28/peripheral/eru/1/exisel/exs1b"/>
+    <resourcesList name="a" requiredResourceUri="http://resources/0.1.28/peripheral/eru/1/1a"/>
+    <resourcesList name="b" requiredResourceUri="http://resources/0.1.28/peripheral/eru/1/1b"/>
+    <resourcesList name="tr" requiredResourceUri="http://resources/0.1.28/peripheral/eru/1/tr1"/>
+    <resourcesList name="fl" requiredResourceUri="http://resources/0.1.28/peripheral/eru/1/fl1"/>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="EXS1B" URI="http://resources/0.1.28/peripheral/eru/1/exisel/exs1b" value="0" toolTipHelpDescription="Event Source Select for B1 (ERS1)" defaultValue="0" startPos="6" stopPos="7" accessPermission="rw" maxValue="3" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Input ERU_1B0 is selected"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Input ERU_1B1 is selected"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Input ERU_1B2 is selected"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Input ERU_1B3 is selected"/>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="EXS1A" URI="http://resources/0.1.28/peripheral/eru/1/exisel/exs1a" value="0" toolTipHelpDescription="Event Source Select for A1 (ERS1)" defaultValue="0" startPos="4" stopPos="5" accessPermission="rw" maxValue="3" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b00" description="Input ERU_1A0 is selected"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b01" description="Input ERU_1A1 is selected"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b10" description="Input ERU_1A2 is selected"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b11" description="Input ERU_1A3 is selected"/>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="PE" URI="http://resources/0.1.28/peripheral/eru/1/exicon1/pe" value="0" toolTipHelpDescription="Output Trigger Pulse Enable for ETLx" defaultValue="0" startPos="0" stopPos="0" accessPermission="rw" maxValue="1" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b0" description="The trigger pulse generation is disabled"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b1" description="The trigger pulse generation is enabled"/>
+  </provided>
+  <provided xsi:type="ResourceModel:BitField" name="OCS" URI="http://resources/0.1.28/peripheral/eru/1/exicon1/ocs" value="0" toolTipHelpDescription="Output Channel Select for ETLx Output Trigger Pulse" defaultValue="0" startPos="4" stopPos="6" accessPermission="rw" maxValue="7" minValue="0">
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b000" description="Trigger pulses are sent to OGU0"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b001" description="Trigger pulses are sent to OGU1"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b010" description="Trigger pulses are sent to OGU2"/>
+    <enumValues xsi:type="ResourceModel:RegEnumValue" value="0b011" description="Trigger pulses are sent to OGU3"/>
+  </provided>
+  <categoryDescription description="The Event Request Unit (ERU) is a versatile event and pattern detection unit." name="Event Request Unit (ERU)"/>
+  <addressBlock offset="0x0" size="0x4000" usage="registers"/>
+</ResourceModel:Peripheral>
