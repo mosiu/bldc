@@ -4122,39 +4122,42 @@
    7:../main.c     **** 
    8:../main.c     **** 
    9:../main.c     **** #include <DAVE.h>                 //Declarations from DAVE Code Generation (includes SFR declaratio
-  10:../main.c     **** 
-  11:../main.c     **** #define SYSTICK_PERIOD_US 	1000u
-  12:../main.c     **** #define PWM_FREQ_HZ			10000u
-  13:../main.c     **** #define PWM_PERIOD_SEC		(1.0/PWM_FREQ_HZ)
-  14:../main.c     **** #define TIME_PER_SYSTIC_SEC (SYSTICK_PERIOD_US)/1000000.0
-  15:../main.c     **** 
-  16:../main.c     **** typedef enum {
-  17:../main.c     **** 	PHASE_A,
-  18:../main.c     **** 	PHASE_B,
-  19:../main.c     **** 	PHASE_C
-  20:../main.c     **** }phase_t;
-  21:../main.c     **** 
-  22:../main.c     **** 
-  23:../main.c     **** /**
+  10:../main.c     **** #include <math.h>
+  11:../main.c     **** 
+  12:../main.c     **** #define SYSTICK_PERIOD_US 	1000u
+  13:../main.c     **** #define PWM_FREQ_HZ			10000u
+  14:../main.c     **** #define PWM_PERIOD_SEC		(1.0/PWM_FREQ_HZ)
+  15:../main.c     **** #define TIME_PER_SYSTIC_SEC (SYSTICK_PERIOD_US)/1000000.0
+  16:../main.c     **** #define SQRT_3				1.73205
+  17:../main.c     **** 
+  18:../main.c     **** typedef enum {
+  19:../main.c     **** 	PHASE_A,
+  20:../main.c     **** 	PHASE_B,
+  21:../main.c     **** 	PHASE_C
+  22:../main.c     **** }phase_t;
+  23:../main.c     **** 
   24:../main.c     **** 
-  25:../main.c     ****  * @brief main() - Application entry point
-  26:../main.c     ****  *
-  27:../main.c     ****  * <b>Details of function</b><br>
-  28:../main.c     ****  * This routine is the application entry point. It is invoked by the device startup code. It is res
-  29:../main.c     ****  * invoking the APP initialization dispatcher routine - DAVE_Init() and hosting the place-holder fo
-  30:../main.c     ****  * code.
-  31:../main.c     ****  */
-  32:../main.c     **** 
-  33:../main.c     **** void PWM_set_duty (float duty_A, float duty_B, float duty_C);
-  34:../main.c     **** void PWM_set_freq (uint32_t freq_hz);
-  35:../main.c     **** void ZSM_update(float amplitude, float phase, uint32_t frequency);
-  36:../main.c     **** void PWM_set_interrupt(void);
-  37:../main.c     **** 
-  38:../main.c     **** void PWM_systick_setting(void);
-  39:../main.c     **** 
-  40:../main.c     **** int main(void)
-  41:../main.c     **** {
- 133              	 .loc 3 41 0
+  25:../main.c     **** /**
+  26:../main.c     **** 
+  27:../main.c     ****  * @brief main() - Application entry point
+  28:../main.c     ****  *
+  29:../main.c     ****  * <b>Details of function</b><br>
+  30:../main.c     ****  * This routine is the application entry point. It is invoked by the device startup code. It is res
+  31:../main.c     ****  * invoking the APP initialization dispatcher routine - DAVE_Init() and hosting the place-holder fo
+  32:../main.c     ****  * code.
+  33:../main.c     ****  */
+  34:../main.c     **** 
+  35:../main.c     **** void PWM_set_duty (float duty_A, float duty_B, float duty_C);
+  36:../main.c     **** void PWM_set_freq (uint32_t freq_hz);
+  37:../main.c     **** void ZSM_update(float amplitude, float phase, uint32_t frequency);
+  38:../main.c     **** void PWM_set_interrupt(void);
+  39:../main.c     **** void SYSTICK_Init();
+  40:../main.c     **** 
+  41:../main.c     **** void SYSTIMER_Irq(void);
+  42:../main.c     **** 
+  43:../main.c     **** int main(void)
+  44:../main.c     **** {
+ 133              	 .loc 3 44 0
  134              	 .cfi_startproc
  135              	 
  136              	 
@@ -4169,20 +4172,17 @@
  145 0004 00AF     	 add r7,sp,#0
  146              	.LCFI14:
  147              	 .cfi_def_cfa_register 7
-  42:../main.c     **** 	uint32_t Systick_Timer_ID;
-  43:../main.c     ****   DAVE_STATUS_t status;
-  44:../main.c     ****   status = DAVE_Init();           /* Initialization of DAVE APPs  */
- 148              	 .loc 3 44 0
+  45:../main.c     ****   DAVE_STATUS_t status;
+  46:../main.c     ****   status = DAVE_Init();           /* Initialization of DAVE APPs  */
+ 148              	 .loc 3 46 0
  149 0006 FFF7FEFF 	 bl DAVE_Init
  150 000a 0346     	 mov r3,r0
  151 000c FB71     	 strb r3,[r7,#7]
-  45:../main.c     ****   PWM_set_interrupt();
- 152              	 .loc 3 45 0
+  47:../main.c     ****   PWM_set_interrupt();
+ 152              	 .loc 3 47 0
  153 000e FFF7FEFF 	 bl PWM_set_interrupt
-  46:../main.c     **** 
-  47:../main.c     ****   // Create software timer - 1ms
-  48:../main.c     **** //  Systick_Timer_ID = (uint32_t)SYSTIMER_CreateTimer(SYSTICK_PERIOD_US,SYSTIMER_MODE_PERIODIC,(voi
-  49:../main.c     **** //  SYSTIMER_StartTimer(Systick_Timer_ID);
+  48:../main.c     **** 
+  49:../main.c     **** 
   50:../main.c     **** 
   51:../main.c     **** 
   52:../main.c     ****   if(status == DAVE_STATUS_FAILURE)
@@ -4248,608 +4248,841 @@
  188              	 .global __aeabi_dmul
  189              	 .global __aeabi_dadd
  190              	 .global __aeabi_d2f
- 191              	 .global __aeabi_dsub
- 192              	 .section .text.ZSM_update,"ax",%progbits
- 193              	 .align 2
- 194              	 .global ZSM_update
- 195              	 .thumb
- 196              	 .thumb_func
- 198              	ZSM_update:
- 199              	.LFB216:
+ 191              	 .global __aeabi_ddiv
+ 192              	 .global __aeabi_dsub
+ 193              	 .section .text.ZSM_update,"ax",%progbits
+ 194              	 .align 2
+ 195              	 .global ZSM_update
+ 196              	 .thumb
+ 197              	 .thumb_func
+ 199              	ZSM_update:
+ 200              	.LFB216:
   79:../main.c     **** }
   80:../main.c     **** 
-  81:../main.c     **** //void PWM_systick_setting(void)
-  82:../main.c     **** //{
-  83:../main.c     **** //	ZSM_update(0.7, 0, 200);
-  84:../main.c     **** //}
-  85:../main.c     **** 
-  86:../main.c     **** void ZSM_update(float amplitude, float phase, uint32_t frequency)
-  87:../main.c     **** {
- 200              	 .loc 3 87 0
- 201              	 .cfi_startproc
- 202              	 
+  81:../main.c     **** 
+  82:../main.c     **** 
+  83:../main.c     **** void ZSM_update(float amplitude, float phase, uint32_t frequency)
+  84:../main.c     **** {
+ 201              	 .loc 3 84 0
+ 202              	 .cfi_startproc
  203              	 
- 204 0000 2DE9B043 	 push {r4,r5,r7,r8,r9,lr}
- 205              	.LCFI15:
- 206              	 .cfi_def_cfa_offset 24
- 207              	 .cfi_offset 4,-24
- 208              	 .cfi_offset 5,-20
- 209              	 .cfi_offset 7,-16
- 210              	 .cfi_offset 8,-12
- 211              	 .cfi_offset 9,-8
- 212              	 .cfi_offset 14,-4
- 213 0004 88B0     	 sub sp,sp,#32
- 214              	.LCFI16:
- 215              	 .cfi_def_cfa_offset 56
- 216 0006 00AF     	 add r7,sp,#0
- 217              	.LCFI17:
- 218              	 .cfi_def_cfa_register 7
- 219 0008 F860     	 str r0,[r7,#12]
- 220 000a B960     	 str r1,[r7,#8]
- 221 000c 7A60     	 str r2,[r7,#4]
-  88:../main.c     **** 	if (amplitude > 1.0)
- 222              	 .loc 3 88 0
- 223 000e D7ED037A 	 flds s15,[r7,#12]
- 224 0012 B7EE007A 	 fconsts s14,#112
- 225 0016 F4EEC77A 	 fcmpes s15,s14
- 226 001a F1EE10FA 	 fmstat
- 227 001e 02DD     	 ble .L12
-  89:../main.c     **** 		amplitude = 1.0;
- 228              	 .loc 3 89 0
- 229 0020 4FF07E53 	 mov r3,#1065353216
- 230 0024 FB60     	 str r3,[r7,#12]
- 231              	.L12:
-  90:../main.c     **** 	if (amplitude < 0)
- 232              	 .loc 3 90 0
- 233 0026 D7ED037A 	 flds s15,[r7,#12]
- 234 002a F5EEC07A 	 fcmpezs s15
- 235 002e F1EE10FA 	 fmstat
- 236 0032 02D5     	 bpl .L14
-  91:../main.c     **** 		amplitude = 0;
- 237              	 .loc 3 91 0
- 238 0034 4FF00003 	 mov r3,#0
- 239 0038 FB60     	 str r3,[r7,#12]
- 240              	.L14:
-  92:../main.c     **** 
-  93:../main.c     **** 	float duty_cycle_result_A, duty_cycle_result_B, duty_cycle_result_C;
+ 204              	 
+ 205 0000 2DE9B043 	 push {r4,r5,r7,r8,r9,lr}
+ 206              	.LCFI15:
+ 207              	 .cfi_def_cfa_offset 24
+ 208              	 .cfi_offset 4,-24
+ 209              	 .cfi_offset 5,-20
+ 210              	 .cfi_offset 7,-16
+ 211              	 .cfi_offset 8,-12
+ 212              	 .cfi_offset 9,-8
+ 213              	 .cfi_offset 14,-4
+ 214 0004 8AB0     	 sub sp,sp,#40
+ 215              	.LCFI16:
+ 216              	 .cfi_def_cfa_offset 64
+ 217 0006 00AF     	 add r7,sp,#0
+ 218              	.LCFI17:
+ 219              	 .cfi_def_cfa_register 7
+ 220 0008 F860     	 str r0,[r7,#12]
+ 221 000a B960     	 str r1,[r7,#8]
+ 222 000c 7A60     	 str r2,[r7,#4]
+  85:../main.c     **** 	// this function is documented by MATLAB "plot_3f.m" file
+  86:../main.c     **** 	if (amplitude > 1.0)
+ 223              	 .loc 3 86 0
+ 224 000e D7ED037A 	 flds s15,[r7,#12]
+ 225 0012 B7EE007A 	 fconsts s14,#112
+ 226 0016 F4EEC77A 	 fcmpes s15,s14
+ 227 001a F1EE10FA 	 fmstat
+ 228 001e 02DD     	 ble .L12
+  87:../main.c     **** 		amplitude = 1.0;
+ 229              	 .loc 3 87 0
+ 230 0020 4FF07E53 	 mov r3,#1065353216
+ 231 0024 FB60     	 str r3,[r7,#12]
+ 232              	.L12:
+  88:../main.c     **** 	if (amplitude < 0)
+ 233              	 .loc 3 88 0
+ 234 0026 D7ED037A 	 flds s15,[r7,#12]
+ 235 002a F5EEC07A 	 fcmpezs s15
+ 236 002e F1EE10FA 	 fmstat
+ 237 0032 02D5     	 bpl .L14
+  89:../main.c     **** 		amplitude = 0;
+ 238              	 .loc 3 89 0
+ 239 0034 4FF00003 	 mov r3,#0
+ 240 0038 FB60     	 str r3,[r7,#12]
+ 241              	.L14:
+  90:../main.c     **** 
+  91:../main.c     **** 	float duty_A, duty_B, duty_C;
+  92:../main.c     **** 	float z0;
+  93:../main.c     **** 	float max_duty, min_duty;
   94:../main.c     **** 
   95:../main.c     **** 	static float time = 0;
   96:../main.c     **** 
-  97:../main.c     **** 	duty_cycle_result_A = amplitude*(0.5*sinf(6.2832*frequency*time + phase)+0.5);
- 241              	 .loc 3 97 0
- 242 003a F868     	 ldr r0,[r7,#12]
- 243 003c FFF7FEFF 	 bl __aeabi_f2d
- 244 0040 0446     	 mov r4,r0
- 245 0042 0D46     	 mov r5,r1
- 246 0044 7868     	 ldr r0,[r7,#4]
- 247 0046 FFF7FEFF 	 bl __aeabi_ui2d
- 248 004a 0246     	 mov r2,r0
- 249 004c 0B46     	 mov r3,r1
- 250 004e 1046     	 mov r0,r2
- 251 0050 1946     	 mov r1,r3
- 252 0052 9BA3     	 adr r3,.L18
- 253 0054 D3E90023 	 ldrd r2,[r3]
- 254 0058 FFF7FEFF 	 bl __aeabi_dmul
- 255 005c 0246     	 mov r2,r0
- 256 005e 0B46     	 mov r3,r1
- 257 0060 9046     	 mov r8,r2
- 258 0062 9946     	 mov r9,r3
- 259 0064 9C4B     	 ldr r3,.L18+24
- 260 0066 1B68     	 ldr r3,[r3]
- 261 0068 1846     	 mov r0,r3
- 262 006a FFF7FEFF 	 bl __aeabi_f2d
- 263 006e 0246     	 mov r2,r0
- 264 0070 0B46     	 mov r3,r1
- 265 0072 4046     	 mov r0,r8
- 266 0074 4946     	 mov r1,r9
- 267 0076 FFF7FEFF 	 bl __aeabi_dmul
- 268 007a 0246     	 mov r2,r0
- 269 007c 0B46     	 mov r3,r1
- 270 007e 9046     	 mov r8,r2
- 271 0080 9946     	 mov r9,r3
- 272 0082 B868     	 ldr r0,[r7,#8]
- 273 0084 FFF7FEFF 	 bl __aeabi_f2d
- 274 0088 0246     	 mov r2,r0
- 275 008a 0B46     	 mov r3,r1
- 276 008c 4046     	 mov r0,r8
- 277 008e 4946     	 mov r1,r9
- 278 0090 FFF7FEFF 	 bl __aeabi_dadd
- 279 0094 0246     	 mov r2,r0
- 280 0096 0B46     	 mov r3,r1
- 281 0098 1046     	 mov r0,r2
- 282 009a 1946     	 mov r1,r3
- 283 009c FFF7FEFF 	 bl __aeabi_d2f
- 284 00a0 0346     	 mov r3,r0
- 285 00a2 1846     	 mov r0,r3
- 286 00a4 FFF7FEFF 	 bl sinf
- 287 00a8 0346     	 mov r3,r0
- 288 00aa 1846     	 mov r0,r3
- 289 00ac FFF7FEFF 	 bl __aeabi_f2d
- 290 00b0 0246     	 mov r2,r0
- 291 00b2 0B46     	 mov r3,r1
- 292 00b4 1046     	 mov r0,r2
- 293 00b6 1946     	 mov r1,r3
- 294 00b8 4FF00002 	 mov r2,#0
- 295 00bc 874B     	 ldr r3,.L18+28
- 296 00be FFF7FEFF 	 bl __aeabi_dmul
- 297 00c2 0246     	 mov r2,r0
- 298 00c4 0B46     	 mov r3,r1
- 299 00c6 1046     	 mov r0,r2
- 300 00c8 1946     	 mov r1,r3
- 301 00ca 4FF00002 	 mov r2,#0
- 302 00ce 834B     	 ldr r3,.L18+28
- 303 00d0 FFF7FEFF 	 bl __aeabi_dadd
- 304 00d4 0246     	 mov r2,r0
- 305 00d6 0B46     	 mov r3,r1
- 306 00d8 2046     	 mov r0,r4
- 307 00da 2946     	 mov r1,r5
- 308 00dc FFF7FEFF 	 bl __aeabi_dmul
- 309 00e0 0246     	 mov r2,r0
- 310 00e2 0B46     	 mov r3,r1
- 311 00e4 1046     	 mov r0,r2
- 312 00e6 1946     	 mov r1,r3
- 313 00e8 FFF7FEFF 	 bl __aeabi_d2f
- 314 00ec 0346     	 mov r3,r0
- 315 00ee FB61     	 str r3,[r7,#28]
-  98:../main.c     **** 	duty_cycle_result_B = amplitude*(0.5*sinf(6.2832*frequency*time + phase + 2.0944)+0.5);
- 316              	 .loc 3 98 0
- 317 00f0 F868     	 ldr r0,[r7,#12]
- 318 00f2 FFF7FEFF 	 bl __aeabi_f2d
- 319 00f6 0446     	 mov r4,r0
- 320 00f8 0D46     	 mov r5,r1
- 321 00fa 7868     	 ldr r0,[r7,#4]
- 322 00fc FFF7FEFF 	 bl __aeabi_ui2d
- 323 0100 0246     	 mov r2,r0
- 324 0102 0B46     	 mov r3,r1
- 325 0104 1046     	 mov r0,r2
- 326 0106 1946     	 mov r1,r3
- 327 0108 6DA3     	 adr r3,.L18
- 328 010a D3E90023 	 ldrd r2,[r3]
- 329 010e FFF7FEFF 	 bl __aeabi_dmul
- 330 0112 0246     	 mov r2,r0
- 331 0114 0B46     	 mov r3,r1
- 332 0116 9046     	 mov r8,r2
- 333 0118 9946     	 mov r9,r3
- 334 011a 6F4B     	 ldr r3,.L18+24
- 335 011c 1B68     	 ldr r3,[r3]
- 336 011e 1846     	 mov r0,r3
- 337 0120 FFF7FEFF 	 bl __aeabi_f2d
- 338 0124 0246     	 mov r2,r0
- 339 0126 0B46     	 mov r3,r1
- 340 0128 4046     	 mov r0,r8
- 341 012a 4946     	 mov r1,r9
- 342 012c FFF7FEFF 	 bl __aeabi_dmul
- 343 0130 0246     	 mov r2,r0
- 344 0132 0B46     	 mov r3,r1
- 345 0134 9046     	 mov r8,r2
- 346 0136 9946     	 mov r9,r3
- 347 0138 B868     	 ldr r0,[r7,#8]
- 348 013a FFF7FEFF 	 bl __aeabi_f2d
- 349 013e 0246     	 mov r2,r0
- 350 0140 0B46     	 mov r3,r1
- 351 0142 4046     	 mov r0,r8
- 352 0144 4946     	 mov r1,r9
- 353 0146 FFF7FEFF 	 bl __aeabi_dadd
- 354 014a 0246     	 mov r2,r0
- 355 014c 0B46     	 mov r3,r1
- 356 014e 1046     	 mov r0,r2
- 357 0150 1946     	 mov r1,r3
- 358 0152 5DA3     	 adr r3,.L18+8
- 359 0154 D3E90023 	 ldrd r2,[r3]
- 360 0158 FFF7FEFF 	 bl __aeabi_dadd
- 361 015c 0246     	 mov r2,r0
- 362 015e 0B46     	 mov r3,r1
- 363 0160 1046     	 mov r0,r2
- 364 0162 1946     	 mov r1,r3
- 365 0164 FFF7FEFF 	 bl __aeabi_d2f
- 366 0168 0346     	 mov r3,r0
- 367 016a 1846     	 mov r0,r3
- 368 016c FFF7FEFF 	 bl sinf
- 369 0170 0346     	 mov r3,r0
- 370 0172 1846     	 mov r0,r3
- 371 0174 FFF7FEFF 	 bl __aeabi_f2d
- 372 0178 0246     	 mov r2,r0
- 373 017a 0B46     	 mov r3,r1
- 374 017c 1046     	 mov r0,r2
- 375 017e 1946     	 mov r1,r3
- 376 0180 4FF00002 	 mov r2,#0
- 377 0184 554B     	 ldr r3,.L18+28
- 378 0186 FFF7FEFF 	 bl __aeabi_dmul
- 379 018a 0246     	 mov r2,r0
- 380 018c 0B46     	 mov r3,r1
- 381 018e 1046     	 mov r0,r2
- 382 0190 1946     	 mov r1,r3
- 383 0192 4FF00002 	 mov r2,#0
- 384 0196 514B     	 ldr r3,.L18+28
- 385 0198 FFF7FEFF 	 bl __aeabi_dadd
- 386 019c 0246     	 mov r2,r0
- 387 019e 0B46     	 mov r3,r1
- 388 01a0 2046     	 mov r0,r4
- 389 01a2 2946     	 mov r1,r5
- 390 01a4 FFF7FEFF 	 bl __aeabi_dmul
- 391 01a8 0246     	 mov r2,r0
- 392 01aa 0B46     	 mov r3,r1
- 393 01ac 1046     	 mov r0,r2
- 394 01ae 1946     	 mov r1,r3
- 395 01b0 FFF7FEFF 	 bl __aeabi_d2f
- 396 01b4 0346     	 mov r3,r0
- 397 01b6 BB61     	 str r3,[r7,#24]
-  99:../main.c     **** 	duty_cycle_result_C = amplitude*(0.5*sinf(6.2832*frequency*time + phase - 2.0944)+0.5);
- 398              	 .loc 3 99 0
- 399 01b8 F868     	 ldr r0,[r7,#12]
- 400 01ba FFF7FEFF 	 bl __aeabi_f2d
- 401 01be 0446     	 mov r4,r0
- 402 01c0 0D46     	 mov r5,r1
- 403 01c2 7868     	 ldr r0,[r7,#4]
- 404 01c4 FFF7FEFF 	 bl __aeabi_ui2d
- 405 01c8 0246     	 mov r2,r0
- 406 01ca 0B46     	 mov r3,r1
- 407 01cc 1046     	 mov r0,r2
- 408 01ce 1946     	 mov r1,r3
- 409 01d0 3BA3     	 adr r3,.L18
- 410 01d2 D3E90023 	 ldrd r2,[r3]
- 411 01d6 FFF7FEFF 	 bl __aeabi_dmul
- 412 01da 0246     	 mov r2,r0
- 413 01dc 0B46     	 mov r3,r1
- 414 01de 9046     	 mov r8,r2
- 415 01e0 9946     	 mov r9,r3
- 416 01e2 3D4B     	 ldr r3,.L18+24
- 417 01e4 1B68     	 ldr r3,[r3]
- 418 01e6 1846     	 mov r0,r3
- 419 01e8 FFF7FEFF 	 bl __aeabi_f2d
- 420 01ec 0246     	 mov r2,r0
- 421 01ee 0B46     	 mov r3,r1
- 422 01f0 4046     	 mov r0,r8
- 423 01f2 4946     	 mov r1,r9
- 424 01f4 FFF7FEFF 	 bl __aeabi_dmul
- 425 01f8 0246     	 mov r2,r0
- 426 01fa 0B46     	 mov r3,r1
- 427 01fc 9046     	 mov r8,r2
- 428 01fe 9946     	 mov r9,r3
- 429 0200 B868     	 ldr r0,[r7,#8]
- 430 0202 FFF7FEFF 	 bl __aeabi_f2d
- 431 0206 0246     	 mov r2,r0
- 432 0208 0B46     	 mov r3,r1
- 433 020a 4046     	 mov r0,r8
- 434 020c 4946     	 mov r1,r9
- 435 020e FFF7FEFF 	 bl __aeabi_dadd
- 436 0212 0246     	 mov r2,r0
- 437 0214 0B46     	 mov r3,r1
- 438 0216 1046     	 mov r0,r2
- 439 0218 1946     	 mov r1,r3
- 440 021a 2BA3     	 adr r3,.L18+8
- 441 021c D3E90023 	 ldrd r2,[r3]
- 442 0220 FFF7FEFF 	 bl __aeabi_dsub
- 443 0224 0246     	 mov r2,r0
- 444 0226 0B46     	 mov r3,r1
- 445 0228 1046     	 mov r0,r2
- 446 022a 1946     	 mov r1,r3
- 447 022c FFF7FEFF 	 bl __aeabi_d2f
- 448 0230 0346     	 mov r3,r0
- 449 0232 1846     	 mov r0,r3
- 450 0234 FFF7FEFF 	 bl sinf
- 451 0238 0346     	 mov r3,r0
- 452 023a 1846     	 mov r0,r3
- 453 023c FFF7FEFF 	 bl __aeabi_f2d
- 454 0240 0246     	 mov r2,r0
- 455 0242 0B46     	 mov r3,r1
- 456 0244 1046     	 mov r0,r2
- 457 0246 1946     	 mov r1,r3
- 458 0248 4FF00002 	 mov r2,#0
- 459 024c 234B     	 ldr r3,.L18+28
- 460 024e FFF7FEFF 	 bl __aeabi_dmul
- 461 0252 0246     	 mov r2,r0
- 462 0254 0B46     	 mov r3,r1
- 463 0256 1046     	 mov r0,r2
- 464 0258 1946     	 mov r1,r3
- 465 025a 4FF00002 	 mov r2,#0
- 466 025e 1F4B     	 ldr r3,.L18+28
- 467 0260 FFF7FEFF 	 bl __aeabi_dadd
- 468 0264 0246     	 mov r2,r0
- 469 0266 0B46     	 mov r3,r1
- 470 0268 2046     	 mov r0,r4
- 471 026a 2946     	 mov r1,r5
- 472 026c FFF7FEFF 	 bl __aeabi_dmul
- 473 0270 0246     	 mov r2,r0
- 474 0272 0B46     	 mov r3,r1
- 475 0274 1046     	 mov r0,r2
- 476 0276 1946     	 mov r1,r3
- 477 0278 FFF7FEFF 	 bl __aeabi_d2f
- 478 027c 0346     	 mov r3,r0
- 479 027e 7B61     	 str r3,[r7,#20]
- 100:../main.c     **** 	PWM_set_duty(duty_cycle_result_A, duty_cycle_result_B, duty_cycle_result_C);
- 480              	 .loc 3 100 0
- 481 0280 F869     	 ldr r0,[r7,#28]
- 482 0282 B969     	 ldr r1,[r7,#24]
- 483 0284 7A69     	 ldr r2,[r7,#20]
- 484 0286 FFF7FEFF 	 bl PWM_set_duty
- 101:../main.c     **** 
- 102:../main.c     **** 	time += PWM_PERIOD_SEC;
- 485              	 .loc 3 102 0
- 486 028a 134B     	 ldr r3,.L18+24
- 487 028c 1B68     	 ldr r3,[r3]
- 488 028e 1846     	 mov r0,r3
- 489 0290 FFF7FEFF 	 bl __aeabi_f2d
- 490 0294 0246     	 mov r2,r0
- 491 0296 0B46     	 mov r3,r1
- 492 0298 1046     	 mov r0,r2
- 493 029a 1946     	 mov r1,r3
- 494 029c 0CA3     	 adr r3,.L18+16
- 495 029e D3E90023 	 ldrd r2,[r3]
- 496 02a2 FFF7FEFF 	 bl __aeabi_dadd
- 497 02a6 0246     	 mov r2,r0
- 498 02a8 0B46     	 mov r3,r1
- 499 02aa 1046     	 mov r0,r2
- 500 02ac 1946     	 mov r1,r3
- 501 02ae FFF7FEFF 	 bl __aeabi_d2f
- 502 02b2 0246     	 mov r2,r0
- 503 02b4 084B     	 ldr r3,.L18+24
- 504 02b6 1A60     	 str r2,[r3]
- 103:../main.c     **** }
- 505              	 .loc 3 103 0
- 506 02b8 2037     	 adds r7,r7,#32
- 507              	.LCFI18:
- 508              	 .cfi_def_cfa_offset 24
- 509 02ba BD46     	 mov sp,r7
- 510              	.LCFI19:
- 511              	 .cfi_def_cfa_register 13
- 512              	 
- 513 02bc BDE8B083 	 pop {r4,r5,r7,r8,r9,pc}
- 514              	.L19:
- 515              	 .align 3
- 516              	.L18:
- 517 02c0 A7E8482E 	 .word 776530087
- 518 02c4 FF211940 	 .word 1075388927
- 519 02c8 6FF085C9 	 .word -913969041
- 520 02cc 54C10040 	 .word 1073791316
- 521 02d0 2D431CEB 	 .word -350469331
- 522 02d4 E2361A3F 	 .word 1058682594
- 523 02d8 00000000 	 .word time.8451
- 524 02dc 0000E03F 	 .word 1071644672
- 525              	 .cfi_endproc
- 526              	.LFE216:
- 528              	 .section .text.PWM_set_freq,"ax",%progbits
- 529              	 .align 2
- 530              	 .global PWM_set_freq
- 531              	 .thumb
- 532              	 .thumb_func
- 534              	PWM_set_freq:
- 535              	.LFB217:
+  97:../main.c     **** 	duty_A = 2*amplitude*(0.5*sinf(6.2832*frequency*time + phase)+0.5)/SQRT_3;
+ 242              	 .loc 3 97 0
+ 243 003a D7ED037A 	 flds s15,[r7,#12]
+ 244 003e 77EEA77A 	 fadds s15,s15,s15
+ 245 0042 17EE900A 	 fmrs r0,s15
+ 246 0046 FFF7FEFF 	 bl __aeabi_f2d
+ 247 004a 0446     	 mov r4,r0
+ 248 004c 0D46     	 mov r5,r1
+ 249 004e 7868     	 ldr r0,[r7,#4]
+ 250 0050 FFF7FEFF 	 bl __aeabi_ui2d
+ 251 0054 0246     	 mov r2,r0
+ 252 0056 0B46     	 mov r3,r1
+ 253 0058 1046     	 mov r0,r2
+ 254 005a 1946     	 mov r1,r3
+ 255 005c B2A3     	 adr r3,.L34+8
+ 256 005e D3E90023 	 ldrd r2,[r3]
+ 257 0062 FFF7FEFF 	 bl __aeabi_dmul
+ 258 0066 0246     	 mov r2,r0
+ 259 0068 0B46     	 mov r3,r1
+ 260 006a 9046     	 mov r8,r2
+ 261 006c 9946     	 mov r9,r3
+ 262 006e B24B     	 ldr r3,.L34+24
+ 263 0070 1B68     	 ldr r3,[r3]
+ 264 0072 1846     	 mov r0,r3
+ 265 0074 FFF7FEFF 	 bl __aeabi_f2d
+ 266 0078 0246     	 mov r2,r0
+ 267 007a 0B46     	 mov r3,r1
+ 268 007c 4046     	 mov r0,r8
+ 269 007e 4946     	 mov r1,r9
+ 270 0080 FFF7FEFF 	 bl __aeabi_dmul
+ 271 0084 0246     	 mov r2,r0
+ 272 0086 0B46     	 mov r3,r1
+ 273 0088 9046     	 mov r8,r2
+ 274 008a 9946     	 mov r9,r3
+ 275 008c B868     	 ldr r0,[r7,#8]
+ 276 008e FFF7FEFF 	 bl __aeabi_f2d
+ 277 0092 0246     	 mov r2,r0
+ 278 0094 0B46     	 mov r3,r1
+ 279 0096 4046     	 mov r0,r8
+ 280 0098 4946     	 mov r1,r9
+ 281 009a FFF7FEFF 	 bl __aeabi_dadd
+ 282 009e 0246     	 mov r2,r0
+ 283 00a0 0B46     	 mov r3,r1
+ 284 00a2 1046     	 mov r0,r2
+ 285 00a4 1946     	 mov r1,r3
+ 286 00a6 FFF7FEFF 	 bl __aeabi_d2f
+ 287 00aa 0346     	 mov r3,r0
+ 288 00ac 1846     	 mov r0,r3
+ 289 00ae FFF7FEFF 	 bl sinf
+ 290 00b2 0346     	 mov r3,r0
+ 291 00b4 1846     	 mov r0,r3
+ 292 00b6 FFF7FEFF 	 bl __aeabi_f2d
+ 293 00ba 0246     	 mov r2,r0
+ 294 00bc 0B46     	 mov r3,r1
+ 295 00be 1046     	 mov r0,r2
+ 296 00c0 1946     	 mov r1,r3
+ 297 00c2 4FF00002 	 mov r2,#0
+ 298 00c6 9D4B     	 ldr r3,.L34+28
+ 299 00c8 FFF7FEFF 	 bl __aeabi_dmul
+ 300 00cc 0246     	 mov r2,r0
+ 301 00ce 0B46     	 mov r3,r1
+ 302 00d0 1046     	 mov r0,r2
+ 303 00d2 1946     	 mov r1,r3
+ 304 00d4 4FF00002 	 mov r2,#0
+ 305 00d8 984B     	 ldr r3,.L34+28
+ 306 00da FFF7FEFF 	 bl __aeabi_dadd
+ 307 00de 0246     	 mov r2,r0
+ 308 00e0 0B46     	 mov r3,r1
+ 309 00e2 2046     	 mov r0,r4
+ 310 00e4 2946     	 mov r1,r5
+ 311 00e6 FFF7FEFF 	 bl __aeabi_dmul
+ 312 00ea 0246     	 mov r2,r0
+ 313 00ec 0B46     	 mov r3,r1
+ 314 00ee 1046     	 mov r0,r2
+ 315 00f0 1946     	 mov r1,r3
+ 316 00f2 8BA3     	 adr r3,.L34
+ 317 00f4 D3E90023 	 ldrd r2,[r3]
+ 318 00f8 FFF7FEFF 	 bl __aeabi_ddiv
+ 319 00fc 0246     	 mov r2,r0
+ 320 00fe 0B46     	 mov r3,r1
+ 321 0100 1046     	 mov r0,r2
+ 322 0102 1946     	 mov r1,r3
+ 323 0104 FFF7FEFF 	 bl __aeabi_d2f
+ 324 0108 0346     	 mov r3,r0
+ 325 010a FB61     	 str r3,[r7,#28]
+  98:../main.c     **** 	duty_B = 2*amplitude*(0.5*sinf(6.2832*frequency*time + phase + 2.0944)+0.5)/SQRT_3;
+ 326              	 .loc 3 98 0
+ 327 010c D7ED037A 	 flds s15,[r7,#12]
+ 328 0110 77EEA77A 	 fadds s15,s15,s15
+ 329 0114 17EE900A 	 fmrs r0,s15
+ 330 0118 FFF7FEFF 	 bl __aeabi_f2d
+ 331 011c 0446     	 mov r4,r0
+ 332 011e 0D46     	 mov r5,r1
+ 333 0120 7868     	 ldr r0,[r7,#4]
+ 334 0122 FFF7FEFF 	 bl __aeabi_ui2d
+ 335 0126 0246     	 mov r2,r0
+ 336 0128 0B46     	 mov r3,r1
+ 337 012a 1046     	 mov r0,r2
+ 338 012c 1946     	 mov r1,r3
+ 339 012e 7EA3     	 adr r3,.L34+8
+ 340 0130 D3E90023 	 ldrd r2,[r3]
+ 341 0134 FFF7FEFF 	 bl __aeabi_dmul
+ 342 0138 0246     	 mov r2,r0
+ 343 013a 0B46     	 mov r3,r1
+ 344 013c 9046     	 mov r8,r2
+ 345 013e 9946     	 mov r9,r3
+ 346 0140 7D4B     	 ldr r3,.L34+24
+ 347 0142 1B68     	 ldr r3,[r3]
+ 348 0144 1846     	 mov r0,r3
+ 349 0146 FFF7FEFF 	 bl __aeabi_f2d
+ 350 014a 0246     	 mov r2,r0
+ 351 014c 0B46     	 mov r3,r1
+ 352 014e 4046     	 mov r0,r8
+ 353 0150 4946     	 mov r1,r9
+ 354 0152 FFF7FEFF 	 bl __aeabi_dmul
+ 355 0156 0246     	 mov r2,r0
+ 356 0158 0B46     	 mov r3,r1
+ 357 015a 9046     	 mov r8,r2
+ 358 015c 9946     	 mov r9,r3
+ 359 015e B868     	 ldr r0,[r7,#8]
+ 360 0160 FFF7FEFF 	 bl __aeabi_f2d
+ 361 0164 0246     	 mov r2,r0
+ 362 0166 0B46     	 mov r3,r1
+ 363 0168 4046     	 mov r0,r8
+ 364 016a 4946     	 mov r1,r9
+ 365 016c FFF7FEFF 	 bl __aeabi_dadd
+ 366 0170 0246     	 mov r2,r0
+ 367 0172 0B46     	 mov r3,r1
+ 368 0174 1046     	 mov r0,r2
+ 369 0176 1946     	 mov r1,r3
+ 370 0178 6DA3     	 adr r3,.L34+16
+ 371 017a D3E90023 	 ldrd r2,[r3]
+ 372 017e FFF7FEFF 	 bl __aeabi_dadd
+ 373 0182 0246     	 mov r2,r0
+ 374 0184 0B46     	 mov r3,r1
+ 375 0186 1046     	 mov r0,r2
+ 376 0188 1946     	 mov r1,r3
+ 377 018a FFF7FEFF 	 bl __aeabi_d2f
+ 378 018e 0346     	 mov r3,r0
+ 379 0190 1846     	 mov r0,r3
+ 380 0192 FFF7FEFF 	 bl sinf
+ 381 0196 0346     	 mov r3,r0
+ 382 0198 1846     	 mov r0,r3
+ 383 019a FFF7FEFF 	 bl __aeabi_f2d
+ 384 019e 0246     	 mov r2,r0
+ 385 01a0 0B46     	 mov r3,r1
+ 386 01a2 1046     	 mov r0,r2
+ 387 01a4 1946     	 mov r1,r3
+ 388 01a6 4FF00002 	 mov r2,#0
+ 389 01aa 644B     	 ldr r3,.L34+28
+ 390 01ac FFF7FEFF 	 bl __aeabi_dmul
+ 391 01b0 0246     	 mov r2,r0
+ 392 01b2 0B46     	 mov r3,r1
+ 393 01b4 1046     	 mov r0,r2
+ 394 01b6 1946     	 mov r1,r3
+ 395 01b8 4FF00002 	 mov r2,#0
+ 396 01bc 5F4B     	 ldr r3,.L34+28
+ 397 01be FFF7FEFF 	 bl __aeabi_dadd
+ 398 01c2 0246     	 mov r2,r0
+ 399 01c4 0B46     	 mov r3,r1
+ 400 01c6 2046     	 mov r0,r4
+ 401 01c8 2946     	 mov r1,r5
+ 402 01ca FFF7FEFF 	 bl __aeabi_dmul
+ 403 01ce 0246     	 mov r2,r0
+ 404 01d0 0B46     	 mov r3,r1
+ 405 01d2 1046     	 mov r0,r2
+ 406 01d4 1946     	 mov r1,r3
+ 407 01d6 52A3     	 adr r3,.L34
+ 408 01d8 D3E90023 	 ldrd r2,[r3]
+ 409 01dc FFF7FEFF 	 bl __aeabi_ddiv
+ 410 01e0 0246     	 mov r2,r0
+ 411 01e2 0B46     	 mov r3,r1
+ 412 01e4 1046     	 mov r0,r2
+ 413 01e6 1946     	 mov r1,r3
+ 414 01e8 FFF7FEFF 	 bl __aeabi_d2f
+ 415 01ec 0346     	 mov r3,r0
+ 416 01ee BB61     	 str r3,[r7,#24]
+  99:../main.c     **** 	duty_C = 2*amplitude*(0.5*sinf(6.2832*frequency*time + phase - 2.0944)+0.5)/SQRT_3;
+ 417              	 .loc 3 99 0
+ 418 01f0 D7ED037A 	 flds s15,[r7,#12]
+ 419 01f4 77EEA77A 	 fadds s15,s15,s15
+ 420 01f8 17EE900A 	 fmrs r0,s15
+ 421 01fc FFF7FEFF 	 bl __aeabi_f2d
+ 422 0200 0446     	 mov r4,r0
+ 423 0202 0D46     	 mov r5,r1
+ 424 0204 7868     	 ldr r0,[r7,#4]
+ 425 0206 FFF7FEFF 	 bl __aeabi_ui2d
+ 426 020a 0246     	 mov r2,r0
+ 427 020c 0B46     	 mov r3,r1
+ 428 020e 1046     	 mov r0,r2
+ 429 0210 1946     	 mov r1,r3
+ 430 0212 45A3     	 adr r3,.L34+8
+ 431 0214 D3E90023 	 ldrd r2,[r3]
+ 432 0218 FFF7FEFF 	 bl __aeabi_dmul
+ 433 021c 0246     	 mov r2,r0
+ 434 021e 0B46     	 mov r3,r1
+ 435 0220 9046     	 mov r8,r2
+ 436 0222 9946     	 mov r9,r3
+ 437 0224 444B     	 ldr r3,.L34+24
+ 438 0226 1B68     	 ldr r3,[r3]
+ 439 0228 1846     	 mov r0,r3
+ 440 022a FFF7FEFF 	 bl __aeabi_f2d
+ 441 022e 0246     	 mov r2,r0
+ 442 0230 0B46     	 mov r3,r1
+ 443 0232 4046     	 mov r0,r8
+ 444 0234 4946     	 mov r1,r9
+ 445 0236 FFF7FEFF 	 bl __aeabi_dmul
+ 446 023a 0246     	 mov r2,r0
+ 447 023c 0B46     	 mov r3,r1
+ 448 023e 9046     	 mov r8,r2
+ 449 0240 9946     	 mov r9,r3
+ 450 0242 B868     	 ldr r0,[r7,#8]
+ 451 0244 FFF7FEFF 	 bl __aeabi_f2d
+ 452 0248 0246     	 mov r2,r0
+ 453 024a 0B46     	 mov r3,r1
+ 454 024c 4046     	 mov r0,r8
+ 455 024e 4946     	 mov r1,r9
+ 456 0250 FFF7FEFF 	 bl __aeabi_dadd
+ 457 0254 0246     	 mov r2,r0
+ 458 0256 0B46     	 mov r3,r1
+ 459 0258 1046     	 mov r0,r2
+ 460 025a 1946     	 mov r1,r3
+ 461 025c 34A3     	 adr r3,.L34+16
+ 462 025e D3E90023 	 ldrd r2,[r3]
+ 463 0262 FFF7FEFF 	 bl __aeabi_dsub
+ 464 0266 0246     	 mov r2,r0
+ 465 0268 0B46     	 mov r3,r1
+ 466 026a 1046     	 mov r0,r2
+ 467 026c 1946     	 mov r1,r3
+ 468 026e FFF7FEFF 	 bl __aeabi_d2f
+ 469 0272 0346     	 mov r3,r0
+ 470 0274 1846     	 mov r0,r3
+ 471 0276 FFF7FEFF 	 bl sinf
+ 472 027a 0346     	 mov r3,r0
+ 473 027c 1846     	 mov r0,r3
+ 474 027e FFF7FEFF 	 bl __aeabi_f2d
+ 475 0282 0246     	 mov r2,r0
+ 476 0284 0B46     	 mov r3,r1
+ 477 0286 1046     	 mov r0,r2
+ 478 0288 1946     	 mov r1,r3
+ 479 028a 4FF00002 	 mov r2,#0
+ 480 028e 2B4B     	 ldr r3,.L34+28
+ 481 0290 FFF7FEFF 	 bl __aeabi_dmul
+ 482 0294 0246     	 mov r2,r0
+ 483 0296 0B46     	 mov r3,r1
+ 484 0298 1046     	 mov r0,r2
+ 485 029a 1946     	 mov r1,r3
+ 486 029c 4FF00002 	 mov r2,#0
+ 487 02a0 264B     	 ldr r3,.L34+28
+ 488 02a2 FFF7FEFF 	 bl __aeabi_dadd
+ 489 02a6 0246     	 mov r2,r0
+ 490 02a8 0B46     	 mov r3,r1
+ 491 02aa 2046     	 mov r0,r4
+ 492 02ac 2946     	 mov r1,r5
+ 493 02ae FFF7FEFF 	 bl __aeabi_dmul
+ 494 02b2 0246     	 mov r2,r0
+ 495 02b4 0B46     	 mov r3,r1
+ 496 02b6 1046     	 mov r0,r2
+ 497 02b8 1946     	 mov r1,r3
+ 498 02ba 19A3     	 adr r3,.L34
+ 499 02bc D3E90023 	 ldrd r2,[r3]
+ 500 02c0 FFF7FEFF 	 bl __aeabi_ddiv
+ 501 02c4 0246     	 mov r2,r0
+ 502 02c6 0B46     	 mov r3,r1
+ 503 02c8 1046     	 mov r0,r2
+ 504 02ca 1946     	 mov r1,r3
+ 505 02cc FFF7FEFF 	 bl __aeabi_d2f
+ 506 02d0 0346     	 mov r3,r0
+ 507 02d2 7B61     	 str r3,[r7,#20]
+ 100:../main.c     **** 
+ 101:../main.c     **** 	max_duty = ( (duty_A > duty_B) ? duty_A : duty_B );
+ 508              	 .loc 3 101 0
+ 509 02d4 97ED077A 	 flds s14,[r7,#28]
+ 510 02d8 D7ED067A 	 flds s15,[r7,#24]
+ 511 02dc B4EEE77A 	 fcmpes s14,s15
+ 512 02e0 F1EE10FA 	 fmstat
+ 513 02e4 01DD     	 ble .L32
+ 514              	 .loc 3 101 0 is_stmt 0 discriminator 1
+ 515 02e6 FB69     	 ldr r3,[r7,#28]
+ 516 02e8 00E0     	 b .L18
+ 517              	.L32:
+ 518              	 .loc 3 101 0 discriminator 2
+ 519 02ea BB69     	 ldr r3,[r7,#24]
+ 520              	.L18:
+ 521              	 .loc 3 101 0 discriminator 4
+ 522 02ec 7B62     	 str r3,[r7,#36]
+ 102:../main.c     **** 	if(duty_C > max_duty)
+ 523              	 .loc 3 102 0 is_stmt 1 discriminator 4
+ 524 02ee 97ED057A 	 flds s14,[r7,#20]
+ 525 02f2 D7ED097A 	 flds s15,[r7,#36]
+ 526 02f6 B4EEE77A 	 fcmpes s14,s15
+ 527 02fa F1EE10FA 	 fmstat
+ 528 02fe 01DD     	 ble .L19
+ 103:../main.c     **** 		max_duty = duty_C;
+ 529              	 .loc 3 103 0
+ 530 0300 7B69     	 ldr r3,[r7,#20]
+ 531 0302 7B62     	 str r3,[r7,#36]
+ 532              	.L19:
  104:../main.c     **** 
- 105:../main.c     **** 
- 106:../main.c     **** 
- 107:../main.c     **** void PWM_set_freq(uint32_t freq_hz)
- 108:../main.c     **** {
- 536              	 .loc 3 108 0
- 537              	 .cfi_startproc
- 538              	 
- 539              	 
- 540 0000 80B5     	 push {r7,lr}
- 541              	.LCFI20:
- 542              	 .cfi_def_cfa_offset 8
- 543              	 .cfi_offset 7,-8
- 544              	 .cfi_offset 14,-4
- 545 0002 82B0     	 sub sp,sp,#8
- 546              	.LCFI21:
- 547              	 .cfi_def_cfa_offset 16
- 548 0004 00AF     	 add r7,sp,#0
- 549              	.LCFI22:
- 550              	 .cfi_def_cfa_register 7
- 551 0006 7860     	 str r0,[r7,#4]
- 109:../main.c     **** 	  PWM_CCU8_SetFreqSymmetric(&PWM_CCU8_0, freq_hz);
- 552              	 .loc 3 109 0
- 553 0008 0748     	 ldr r0,.L21
- 554 000a 7968     	 ldr r1,[r7,#4]
- 555 000c FFF7FEFF 	 bl PWM_CCU8_SetFreqSymmetric
- 110:../main.c     **** 	  PWM_CCU8_SetFreqSymmetric(&PWM_CCU8_1, freq_hz);
- 556              	 .loc 3 110 0
- 557 0010 0648     	 ldr r0,.L21+4
- 558 0012 7968     	 ldr r1,[r7,#4]
- 559 0014 FFF7FEFF 	 bl PWM_CCU8_SetFreqSymmetric
- 111:../main.c     **** 	  PWM_CCU8_SetFreqSymmetric(&PWM_CCU8_2, freq_hz);
- 560              	 .loc 3 111 0
- 561 0018 0548     	 ldr r0,.L21+8
- 562 001a 7968     	 ldr r1,[r7,#4]
- 563 001c FFF7FEFF 	 bl PWM_CCU8_SetFreqSymmetric
- 112:../main.c     **** }
- 564              	 .loc 3 112 0
- 565 0020 0837     	 adds r7,r7,#8
- 566              	.LCFI23:
- 567              	 .cfi_def_cfa_offset 8
- 568 0022 BD46     	 mov sp,r7
- 569              	.LCFI24:
- 570              	 .cfi_def_cfa_register 13
- 571              	 
- 572 0024 80BD     	 pop {r7,pc}
- 573              	.L22:
- 574 0026 00BF     	 .align 2
- 575              	.L21:
- 576 0028 00000000 	 .word PWM_CCU8_0
- 577 002c 00000000 	 .word PWM_CCU8_1
- 578 0030 00000000 	 .word PWM_CCU8_2
- 579              	 .cfi_endproc
- 580              	.LFE217:
- 582              	 .section .text.PWM_set_duty,"ax",%progbits
- 583              	 .align 2
- 584              	 .global PWM_set_duty
- 585              	 .thumb
- 586              	 .thumb_func
- 588              	PWM_set_duty:
- 589              	.LFB218:
- 113:../main.c     **** 
- 114:../main.c     **** void PWM_set_duty (float duty_A, float duty_B, float duty_C)
- 115:../main.c     **** {
- 590              	 .loc 3 115 0
- 591              	 .cfi_startproc
- 592              	 
- 593              	 
- 594 0000 80B5     	 push {r7,lr}
- 595              	.LCFI25:
- 596              	 .cfi_def_cfa_offset 8
- 597              	 .cfi_offset 7,-8
- 598              	 .cfi_offset 14,-4
- 599 0002 84B0     	 sub sp,sp,#16
- 600              	.LCFI26:
- 601              	 .cfi_def_cfa_offset 24
- 602 0004 00AF     	 add r7,sp,#0
- 603              	.LCFI27:
- 604              	 .cfi_def_cfa_register 7
- 605 0006 F860     	 str r0,[r7,#12]
- 606 0008 B960     	 str r1,[r7,#8]
- 607 000a 7A60     	 str r2,[r7,#4]
- 116:../main.c     **** 	PWM_CCU8_SetDutyCycleSymmetric(&PWM_CCU8_0, XMC_CCU8_SLICE_COMPARE_CHANNEL_1, (uint32_t)10000*duty
- 608              	 .loc 3 116 0
- 609 000c D7ED037A 	 flds s15,[r7,#12]
- 610 0010 9FED157A 	 flds s14,.L24
- 611 0014 67EE877A 	 fmuls s15,s15,s14
- 612 0018 FCEEE77A 	 ftouizs s15,s15
- 613 001c 1348     	 ldr r0,.L24+4
- 614 001e 0021     	 movs r1,#0
- 615 0020 17EE902A 	 fmrs r2,s15
- 616 0024 FFF7FEFF 	 bl PWM_CCU8_SetDutyCycleSymmetric
- 117:../main.c     **** 
- 118:../main.c     **** 	PWM_CCU8_SetDutyCycleSymmetric(&PWM_CCU8_1, XMC_CCU8_SLICE_COMPARE_CHANNEL_1, (uint32_t)10000*duty
- 617              	 .loc 3 118 0
- 618 0028 D7ED027A 	 flds s15,[r7,#8]
- 619 002c 9FED0E7A 	 flds s14,.L24
- 620 0030 67EE877A 	 fmuls s15,s15,s14
- 621 0034 FCEEE77A 	 ftouizs s15,s15
- 622 0038 0D48     	 ldr r0,.L24+8
- 623 003a 0021     	 movs r1,#0
- 624 003c 17EE902A 	 fmrs r2,s15
- 625 0040 FFF7FEFF 	 bl PWM_CCU8_SetDutyCycleSymmetric
+ 105:../main.c     **** 	min_duty = ( (duty_A < duty_B) ? duty_A : duty_B );
+ 533              	 .loc 3 105 0
+ 534 0304 97ED077A 	 flds s14,[r7,#28]
+ 535 0308 D7ED067A 	 flds s15,[r7,#24]
+ 536 030c B4EEE77A 	 fcmpes s14,s15
+ 537 0310 F1EE10FA 	 fmstat
+ 538 0314 14D5     	 bpl .L33
+ 539              	 .loc 3 105 0 is_stmt 0 discriminator 1
+ 540 0316 FB69     	 ldr r3,[r7,#28]
+ 541 0318 13E0     	 b .L23
+ 542              	.L35:
+ 543 031a 00BFAFF3 	 .align 3
+ 543      0080
+ 544              	.L34:
+ 545 0320 BC96900F 	 .word 261134012
+ 546 0324 7AB6FB3F 	 .word 1073460858
+ 547 0328 A7E8482E 	 .word 776530087
+ 548 032c FF211940 	 .word 1075388927
+ 549 0330 6FF085C9 	 .word -913969041
+ 550 0334 54C10040 	 .word 1073791316
+ 551 0338 00000000 	 .word time.8961
+ 552 033c 0000E03F 	 .word 1071644672
+ 553              	.L33:
+ 554              	 .loc 3 105 0 discriminator 2
+ 555 0340 BB69     	 ldr r3,[r7,#24]
+ 556              	.L23:
+ 557              	 .loc 3 105 0 discriminator 4
+ 558 0342 3B62     	 str r3,[r7,#32]
+ 106:../main.c     **** 	if(duty_C < min_duty)
+ 559              	 .loc 3 106 0 is_stmt 1 discriminator 4
+ 560 0344 97ED057A 	 flds s14,[r7,#20]
+ 561 0348 D7ED087A 	 flds s15,[r7,#32]
+ 562 034c B4EEE77A 	 fcmpes s14,s15
+ 563 0350 F1EE10FA 	 fmstat
+ 564 0354 01D5     	 bpl .L24
+ 107:../main.c     **** 			min_duty = duty_C;
+ 565              	 .loc 3 107 0
+ 566 0356 7B69     	 ldr r3,[r7,#20]
+ 567 0358 3B62     	 str r3,[r7,#32]
+ 568              	.L24:
+ 108:../main.c     **** 
+ 109:../main.c     **** 	z0 = 0.5 - 0.5*(max_duty + min_duty);
+ 569              	 .loc 3 109 0
+ 570 035a 97ED097A 	 flds s14,[r7,#36]
+ 571 035e D7ED087A 	 flds s15,[r7,#32]
+ 572 0362 77EE277A 	 fadds s15,s14,s15
+ 573 0366 17EE900A 	 fmrs r0,s15
+ 574 036a FFF7FEFF 	 bl __aeabi_f2d
+ 575 036e 0246     	 mov r2,r0
+ 576 0370 0B46     	 mov r3,r1
+ 577 0372 1046     	 mov r0,r2
+ 578 0374 1946     	 mov r1,r3
+ 579 0376 4FF00002 	 mov r2,#0
+ 580 037a 274B     	 ldr r3,.L36+8
+ 581 037c FFF7FEFF 	 bl __aeabi_dmul
+ 582 0380 0246     	 mov r2,r0
+ 583 0382 0B46     	 mov r3,r1
+ 584 0384 4FF00000 	 mov r0,#0
+ 585 0388 2349     	 ldr r1,.L36+8
+ 586 038a FFF7FEFF 	 bl __aeabi_dsub
+ 587 038e 0246     	 mov r2,r0
+ 588 0390 0B46     	 mov r3,r1
+ 589 0392 1046     	 mov r0,r2
+ 590 0394 1946     	 mov r1,r3
+ 591 0396 FFF7FEFF 	 bl __aeabi_d2f
+ 592 039a 0346     	 mov r3,r0
+ 593 039c 3B61     	 str r3,[r7,#16]
+ 110:../main.c     **** 
+ 111:../main.c     **** 	duty_A += z0;
+ 594              	 .loc 3 111 0
+ 595 039e 97ED077A 	 flds s14,[r7,#28]
+ 596 03a2 D7ED047A 	 flds s15,[r7,#16]
+ 597 03a6 77EE277A 	 fadds s15,s14,s15
+ 598 03aa C7ED077A 	 fsts s15,[r7,#28]
+ 112:../main.c     **** 	duty_B += z0;
+ 599              	 .loc 3 112 0
+ 600 03ae 97ED067A 	 flds s14,[r7,#24]
+ 601 03b2 D7ED047A 	 flds s15,[r7,#16]
+ 602 03b6 77EE277A 	 fadds s15,s14,s15
+ 603 03ba C7ED067A 	 fsts s15,[r7,#24]
+ 113:../main.c     **** 	duty_C += z0;
+ 604              	 .loc 3 113 0
+ 605 03be 97ED057A 	 flds s14,[r7,#20]
+ 606 03c2 D7ED047A 	 flds s15,[r7,#16]
+ 607 03c6 77EE277A 	 fadds s15,s14,s15
+ 608 03ca C7ED057A 	 fsts s15,[r7,#20]
+ 114:../main.c     **** 
+ 115:../main.c     **** 	PWM_set_duty(duty_A, duty_B, duty_C);
+ 609              	 .loc 3 115 0
+ 610 03ce F869     	 ldr r0,[r7,#28]
+ 611 03d0 B969     	 ldr r1,[r7,#24]
+ 612 03d2 7A69     	 ldr r2,[r7,#20]
+ 613 03d4 FFF7FEFF 	 bl PWM_set_duty
+ 116:../main.c     **** 
+ 117:../main.c     **** 	time += PWM_PERIOD_SEC;
+ 614              	 .loc 3 117 0
+ 615 03d8 104B     	 ldr r3,.L36+12
+ 616 03da 1B68     	 ldr r3,[r3]
+ 617 03dc 1846     	 mov r0,r3
+ 618 03de FFF7FEFF 	 bl __aeabi_f2d
+ 619 03e2 0246     	 mov r2,r0
+ 620 03e4 0B46     	 mov r3,r1
+ 621 03e6 1046     	 mov r0,r2
+ 622 03e8 1946     	 mov r1,r3
+ 623 03ea 09A3     	 adr r3,.L36
+ 624 03ec D3E90023 	 ldrd r2,[r3]
+ 625 03f0 FFF7FEFF 	 bl __aeabi_dadd
+ 626 03f4 0246     	 mov r2,r0
+ 627 03f6 0B46     	 mov r3,r1
+ 628 03f8 1046     	 mov r0,r2
+ 629 03fa 1946     	 mov r1,r3
+ 630 03fc FFF7FEFF 	 bl __aeabi_d2f
+ 631 0400 0246     	 mov r2,r0
+ 632 0402 064B     	 ldr r3,.L36+12
+ 633 0404 1A60     	 str r2,[r3]
+ 118:../main.c     **** }
+ 634              	 .loc 3 118 0
+ 635 0406 2837     	 adds r7,r7,#40
+ 636              	.LCFI18:
+ 637              	 .cfi_def_cfa_offset 24
+ 638 0408 BD46     	 mov sp,r7
+ 639              	.LCFI19:
+ 640              	 .cfi_def_cfa_register 13
+ 641              	 
+ 642 040a BDE8B083 	 pop {r4,r5,r7,r8,r9,pc}
+ 643              	.L37:
+ 644 040e 00BF     	 .align 3
+ 645              	.L36:
+ 646 0410 2D431CEB 	 .word -350469331
+ 647 0414 E2361A3F 	 .word 1058682594
+ 648 0418 0000E03F 	 .word 1071644672
+ 649 041c 00000000 	 .word time.8961
+ 650              	 .cfi_endproc
+ 651              	.LFE216:
+ 653              	 .section .text.PWM_set_freq,"ax",%progbits
+ 654              	 .align 2
+ 655              	 .global PWM_set_freq
+ 656              	 .thumb
+ 657              	 .thumb_func
+ 659              	PWM_set_freq:
+ 660              	.LFB217:
  119:../main.c     **** 
- 120:../main.c     **** 	PWM_CCU8_SetDutyCycleSymmetric(&PWM_CCU8_2, XMC_CCU8_SLICE_COMPARE_CHANNEL_1, (uint32_t)10000*duty
- 626              	 .loc 3 120 0
- 627 0044 D7ED017A 	 flds s15,[r7,#4]
- 628 0048 9FED077A 	 flds s14,.L24
- 629 004c 67EE877A 	 fmuls s15,s15,s14
- 630 0050 FCEEE77A 	 ftouizs s15,s15
- 631 0054 0748     	 ldr r0,.L24+12
- 632 0056 0021     	 movs r1,#0
- 633 0058 17EE902A 	 fmrs r2,s15
- 634 005c FFF7FEFF 	 bl PWM_CCU8_SetDutyCycleSymmetric
- 121:../main.c     **** }
- 635              	 .loc 3 121 0
- 636 0060 1037     	 adds r7,r7,#16
- 637              	.LCFI28:
- 638              	 .cfi_def_cfa_offset 8
- 639 0062 BD46     	 mov sp,r7
- 640              	.LCFI29:
- 641              	 .cfi_def_cfa_register 13
- 642              	 
- 643 0064 80BD     	 pop {r7,pc}
- 644              	.L25:
- 645 0066 00BF     	 .align 2
- 646              	.L24:
- 647 0068 00401C46 	 .word 1176256512
- 648 006c 00000000 	 .word PWM_CCU8_0
- 649 0070 00000000 	 .word PWM_CCU8_1
- 650 0074 00000000 	 .word PWM_CCU8_2
- 651              	 .cfi_endproc
- 652              	.LFE218:
- 654              	 .section .text.PWM_set_interrupt,"ax",%progbits
- 655              	 .align 2
- 656              	 .global PWM_set_interrupt
- 657              	 .thumb
- 658              	 .thumb_func
- 660              	PWM_set_interrupt:
- 661              	.LFB219:
- 122:../main.c     **** 
- 123:../main.c     **** void PWM_set_interrupt (void)
- 124:../main.c     **** {
- 662              	 .loc 3 124 0
- 663              	 .cfi_startproc
+ 120:../main.c     **** 
+ 121:../main.c     **** 
+ 122:../main.c     **** void PWM_set_freq(uint32_t freq_hz)
+ 123:../main.c     **** {
+ 661              	 .loc 3 123 0
+ 662              	 .cfi_startproc
+ 663              	 
  664              	 
- 665              	 
- 666 0000 80B5     	 push {r7,lr}
- 667              	.LCFI30:
- 668              	 .cfi_def_cfa_offset 8
- 669              	 .cfi_offset 7,-8
- 670              	 .cfi_offset 14,-4
- 671 0002 00AF     	 add r7,sp,#0
- 672              	.LCFI31:
- 673              	 .cfi_def_cfa_register 7
- 125:../main.c     **** 	XMC_CCU8_SLICE_EnableEvent(CCU80_CC80, XMC_CCU8_SLICE_IRQ_ID_PERIOD_MATCH);
- 674              	 .loc 3 125 0
- 675 0004 0648     	 ldr r0,.L27
- 676 0006 0021     	 movs r1,#0
- 677 0008 FFF7FEFF 	 bl XMC_CCU8_SLICE_EnableEvent
- 126:../main.c     **** 	XMC_CCU8_SLICE_SetInterruptNode(CCU80_CC80, XMC_CCU8_SLICE_IRQ_ID_PERIOD_MATCH, XMC_CCU8_SLICE_SR_
- 678              	 .loc 3 126 0
- 679 000c 0448     	 ldr r0,.L27
- 680 000e 0021     	 movs r1,#0
- 681 0010 0022     	 movs r2,#0
- 682 0012 FFF7FEFF 	 bl XMC_CCU8_SLICE_SetInterruptNode
- 127:../main.c     **** 	NVIC_EnableIRQ(CCU80_0_IRQn);
- 683              	 .loc 3 127 0
- 684 0016 3C20     	 movs r0,#60
- 685 0018 FFF7FEFF 	 bl NVIC_EnableIRQ
- 128:../main.c     **** }
- 686              	 .loc 3 128 0
- 687 001c 80BD     	 pop {r7,pc}
- 688              	.L28:
- 689 001e 00BF     	 .align 2
- 690              	.L27:
- 691 0020 00010240 	 .word 1073873152
- 692              	 .cfi_endproc
- 693              	.LFE219:
- 695              	 .section .text.CCU80_0_IRQHandler,"ax",%progbits
- 696              	 .align 2
- 697              	 .global CCU80_0_IRQHandler
- 698              	 .thumb
- 699              	 .thumb_func
- 701              	CCU80_0_IRQHandler:
- 702              	.LFB220:
- 129:../main.c     **** 
- 130:../main.c     **** void
- 131:../main.c     **** CCU80_0_IRQHandler()
- 132:../main.c     **** {
- 703              	 .loc 3 132 0
- 704              	 .cfi_startproc
- 705              	 
- 706              	 
- 707 0000 80B5     	 push {r7,lr}
- 708              	.LCFI32:
- 709              	 .cfi_def_cfa_offset 8
- 710              	 .cfi_offset 7,-8
- 711              	 .cfi_offset 14,-4
- 712 0002 00AF     	 add r7,sp,#0
- 713              	.LCFI33:
- 714              	 .cfi_def_cfa_register 7
- 133:../main.c     **** 	ZSM_update(0.7, 0, 1);
- 715              	 .loc 3 133 0
- 716 0004 0348     	 ldr r0,.L30
- 717 0006 4FF00001 	 mov r1,#0
- 718 000a 0122     	 movs r2,#1
- 719 000c FFF7FEFF 	 bl ZSM_update
- 134:../main.c     **** }
- 720              	 .loc 3 134 0
- 721 0010 80BD     	 pop {r7,pc}
- 722              	.L31:
- 723 0012 00BF     	 .align 2
- 724              	.L30:
- 725 0014 3333333F 	 .word 1060320051
- 726              	 .cfi_endproc
- 727              	.LFE220:
- 729              	 .section .bss.time.8451,"aw",%nobits
- 730              	 .align 2
- 733              	time.8451:
- 734 0000 00000000 	 .space 4
- 735              	 .text
- 736              	.Letext0:
- 737              	 .file 4 "d:\\dave-4.1.2\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
- 738              	 .file 5 "d:\\dave-4.1.2\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
- 739              	 .file 6 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex/Libraries/CMSIS/Infineon/XMC4500_series/Include/XMC4500.h"
- 740              	 .file 7 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex\\Libraries\\XMCLib\\inc/xmc4_scu.h"
- 741              	 .file 8 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex\\Libraries\\XMCLib\\inc/xmc_gpio.h"
- 742              	 .file 9 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex\\Libraries\\XMCLib\\inc/xmc4_gpio.h"
- 743              	 .file 10 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex\\Dave\\Generated/GLOBAL_CCU8/global_ccu8.h"
- 744              	 .file 11 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex\\Dave\\Generated/PWM_CCU8/pwm_ccu8.h"
- 745              	 .file 12 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex\\Dave\\Generated/DAVE.h"
- 746              	 .file 13 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex/Libraries/CMSIS/Infineon/XMC4500_series/Include/system_XMC4500.h"
- 747              	 .file 14 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex\\Dave\\Generated/PWM_CCU8/pwm_ccu8_extern.h"
- 748              	 .file 15 "<built-in>"
+ 665 0000 80B5     	 push {r7,lr}
+ 666              	.LCFI20:
+ 667              	 .cfi_def_cfa_offset 8
+ 668              	 .cfi_offset 7,-8
+ 669              	 .cfi_offset 14,-4
+ 670 0002 82B0     	 sub sp,sp,#8
+ 671              	.LCFI21:
+ 672              	 .cfi_def_cfa_offset 16
+ 673 0004 00AF     	 add r7,sp,#0
+ 674              	.LCFI22:
+ 675              	 .cfi_def_cfa_register 7
+ 676 0006 7860     	 str r0,[r7,#4]
+ 124:../main.c     **** 	  PWM_CCU8_SetFreqSymmetric(&PWM_CCU8_0, freq_hz);
+ 677              	 .loc 3 124 0
+ 678 0008 0748     	 ldr r0,.L39
+ 679 000a 7968     	 ldr r1,[r7,#4]
+ 680 000c FFF7FEFF 	 bl PWM_CCU8_SetFreqSymmetric
+ 125:../main.c     **** 	  PWM_CCU8_SetFreqSymmetric(&PWM_CCU8_1, freq_hz);
+ 681              	 .loc 3 125 0
+ 682 0010 0648     	 ldr r0,.L39+4
+ 683 0012 7968     	 ldr r1,[r7,#4]
+ 684 0014 FFF7FEFF 	 bl PWM_CCU8_SetFreqSymmetric
+ 126:../main.c     **** 	  PWM_CCU8_SetFreqSymmetric(&PWM_CCU8_2, freq_hz);
+ 685              	 .loc 3 126 0
+ 686 0018 0548     	 ldr r0,.L39+8
+ 687 001a 7968     	 ldr r1,[r7,#4]
+ 688 001c FFF7FEFF 	 bl PWM_CCU8_SetFreqSymmetric
+ 127:../main.c     **** }
+ 689              	 .loc 3 127 0
+ 690 0020 0837     	 adds r7,r7,#8
+ 691              	.LCFI23:
+ 692              	 .cfi_def_cfa_offset 8
+ 693 0022 BD46     	 mov sp,r7
+ 694              	.LCFI24:
+ 695              	 .cfi_def_cfa_register 13
+ 696              	 
+ 697 0024 80BD     	 pop {r7,pc}
+ 698              	.L40:
+ 699 0026 00BF     	 .align 2
+ 700              	.L39:
+ 701 0028 00000000 	 .word PWM_CCU8_0
+ 702 002c 00000000 	 .word PWM_CCU8_1
+ 703 0030 00000000 	 .word PWM_CCU8_2
+ 704              	 .cfi_endproc
+ 705              	.LFE217:
+ 707              	 .section .text.PWM_set_duty,"ax",%progbits
+ 708              	 .align 2
+ 709              	 .global PWM_set_duty
+ 710              	 .thumb
+ 711              	 .thumb_func
+ 713              	PWM_set_duty:
+ 714              	.LFB218:
+ 128:../main.c     **** 
+ 129:../main.c     **** void PWM_set_duty (float duty_A, float duty_B, float duty_C)
+ 130:../main.c     **** {
+ 715              	 .loc 3 130 0
+ 716              	 .cfi_startproc
+ 717              	 
+ 718              	 
+ 719 0000 80B5     	 push {r7,lr}
+ 720              	.LCFI25:
+ 721              	 .cfi_def_cfa_offset 8
+ 722              	 .cfi_offset 7,-8
+ 723              	 .cfi_offset 14,-4
+ 724 0002 84B0     	 sub sp,sp,#16
+ 725              	.LCFI26:
+ 726              	 .cfi_def_cfa_offset 24
+ 727 0004 00AF     	 add r7,sp,#0
+ 728              	.LCFI27:
+ 729              	 .cfi_def_cfa_register 7
+ 730 0006 F860     	 str r0,[r7,#12]
+ 731 0008 B960     	 str r1,[r7,#8]
+ 732 000a 7A60     	 str r2,[r7,#4]
+ 131:../main.c     **** 	PWM_CCU8_SetDutyCycleSymmetric(&PWM_CCU8_0, XMC_CCU8_SLICE_COMPARE_CHANNEL_1, (uint32_t)10000*duty
+ 733              	 .loc 3 131 0
+ 734 000c D7ED037A 	 flds s15,[r7,#12]
+ 735 0010 9FED157A 	 flds s14,.L42
+ 736 0014 67EE877A 	 fmuls s15,s15,s14
+ 737 0018 FCEEE77A 	 ftouizs s15,s15
+ 738 001c 1348     	 ldr r0,.L42+4
+ 739 001e 0021     	 movs r1,#0
+ 740 0020 17EE902A 	 fmrs r2,s15
+ 741 0024 FFF7FEFF 	 bl PWM_CCU8_SetDutyCycleSymmetric
+ 132:../main.c     **** 
+ 133:../main.c     **** 	PWM_CCU8_SetDutyCycleSymmetric(&PWM_CCU8_1, XMC_CCU8_SLICE_COMPARE_CHANNEL_1, (uint32_t)10000*duty
+ 742              	 .loc 3 133 0
+ 743 0028 D7ED027A 	 flds s15,[r7,#8]
+ 744 002c 9FED0E7A 	 flds s14,.L42
+ 745 0030 67EE877A 	 fmuls s15,s15,s14
+ 746 0034 FCEEE77A 	 ftouizs s15,s15
+ 747 0038 0D48     	 ldr r0,.L42+8
+ 748 003a 0021     	 movs r1,#0
+ 749 003c 17EE902A 	 fmrs r2,s15
+ 750 0040 FFF7FEFF 	 bl PWM_CCU8_SetDutyCycleSymmetric
+ 134:../main.c     **** 
+ 135:../main.c     **** 	PWM_CCU8_SetDutyCycleSymmetric(&PWM_CCU8_2, XMC_CCU8_SLICE_COMPARE_CHANNEL_1, (uint32_t)10000*duty
+ 751              	 .loc 3 135 0
+ 752 0044 D7ED017A 	 flds s15,[r7,#4]
+ 753 0048 9FED077A 	 flds s14,.L42
+ 754 004c 67EE877A 	 fmuls s15,s15,s14
+ 755 0050 FCEEE77A 	 ftouizs s15,s15
+ 756 0054 0748     	 ldr r0,.L42+12
+ 757 0056 0021     	 movs r1,#0
+ 758 0058 17EE902A 	 fmrs r2,s15
+ 759 005c FFF7FEFF 	 bl PWM_CCU8_SetDutyCycleSymmetric
+ 136:../main.c     **** }
+ 760              	 .loc 3 136 0
+ 761 0060 1037     	 adds r7,r7,#16
+ 762              	.LCFI28:
+ 763              	 .cfi_def_cfa_offset 8
+ 764 0062 BD46     	 mov sp,r7
+ 765              	.LCFI29:
+ 766              	 .cfi_def_cfa_register 13
+ 767              	 
+ 768 0064 80BD     	 pop {r7,pc}
+ 769              	.L43:
+ 770 0066 00BF     	 .align 2
+ 771              	.L42:
+ 772 0068 00401C46 	 .word 1176256512
+ 773 006c 00000000 	 .word PWM_CCU8_0
+ 774 0070 00000000 	 .word PWM_CCU8_1
+ 775 0074 00000000 	 .word PWM_CCU8_2
+ 776              	 .cfi_endproc
+ 777              	.LFE218:
+ 779              	 .section .text.PWM_set_interrupt,"ax",%progbits
+ 780              	 .align 2
+ 781              	 .global PWM_set_interrupt
+ 782              	 .thumb
+ 783              	 .thumb_func
+ 785              	PWM_set_interrupt:
+ 786              	.LFB219:
+ 137:../main.c     **** 
+ 138:../main.c     **** void PWM_set_interrupt (void)
+ 139:../main.c     **** {
+ 787              	 .loc 3 139 0
+ 788              	 .cfi_startproc
+ 789              	 
+ 790              	 
+ 791 0000 80B5     	 push {r7,lr}
+ 792              	.LCFI30:
+ 793              	 .cfi_def_cfa_offset 8
+ 794              	 .cfi_offset 7,-8
+ 795              	 .cfi_offset 14,-4
+ 796 0002 00AF     	 add r7,sp,#0
+ 797              	.LCFI31:
+ 798              	 .cfi_def_cfa_register 7
+ 140:../main.c     **** 	XMC_CCU8_SLICE_EnableEvent(CCU80_CC80, XMC_CCU8_SLICE_IRQ_ID_PERIOD_MATCH);
+ 799              	 .loc 3 140 0
+ 800 0004 0648     	 ldr r0,.L45
+ 801 0006 0021     	 movs r1,#0
+ 802 0008 FFF7FEFF 	 bl XMC_CCU8_SLICE_EnableEvent
+ 141:../main.c     **** 	XMC_CCU8_SLICE_SetInterruptNode(CCU80_CC80, XMC_CCU8_SLICE_IRQ_ID_PERIOD_MATCH, XMC_CCU8_SLICE_SR_
+ 803              	 .loc 3 141 0
+ 804 000c 0448     	 ldr r0,.L45
+ 805 000e 0021     	 movs r1,#0
+ 806 0010 0022     	 movs r2,#0
+ 807 0012 FFF7FEFF 	 bl XMC_CCU8_SLICE_SetInterruptNode
+ 142:../main.c     **** 	NVIC_EnableIRQ(CCU80_0_IRQn);
+ 808              	 .loc 3 142 0
+ 809 0016 3C20     	 movs r0,#60
+ 810 0018 FFF7FEFF 	 bl NVIC_EnableIRQ
+ 143:../main.c     **** }
+ 811              	 .loc 3 143 0
+ 812 001c 80BD     	 pop {r7,pc}
+ 813              	.L46:
+ 814 001e 00BF     	 .align 2
+ 815              	.L45:
+ 816 0020 00010240 	 .word 1073873152
+ 817              	 .cfi_endproc
+ 818              	.LFE219:
+ 820              	 .section .text.CCU80_0_IRQHandler,"ax",%progbits
+ 821              	 .align 2
+ 822              	 .global CCU80_0_IRQHandler
+ 823              	 .thumb
+ 824              	 .thumb_func
+ 826              	CCU80_0_IRQHandler:
+ 827              	.LFB220:
+ 144:../main.c     **** 
+ 145:../main.c     **** void
+ 146:../main.c     **** CCU80_0_IRQHandler()
+ 147:../main.c     **** {
+ 828              	 .loc 3 147 0
+ 829              	 .cfi_startproc
+ 830              	 
+ 831              	 
+ 832 0000 80B5     	 push {r7,lr}
+ 833              	.LCFI32:
+ 834              	 .cfi_def_cfa_offset 8
+ 835              	 .cfi_offset 7,-8
+ 836              	 .cfi_offset 14,-4
+ 837 0002 00AF     	 add r7,sp,#0
+ 838              	.LCFI33:
+ 839              	 .cfi_def_cfa_register 7
+ 148:../main.c     **** 	ZSM_update(0.86, 0, 1);
+ 840              	 .loc 3 148 0
+ 841 0004 0348     	 ldr r0,.L48
+ 842 0006 4FF00001 	 mov r1,#0
+ 843 000a 0122     	 movs r2,#1
+ 844 000c FFF7FEFF 	 bl ZSM_update
+ 149:../main.c     **** }
+ 845              	 .loc 3 149 0
+ 846 0010 80BD     	 pop {r7,pc}
+ 847              	.L49:
+ 848 0012 00BF     	 .align 2
+ 849              	.L48:
+ 850 0014 F6285C3F 	 .word 1063004406
+ 851              	 .cfi_endproc
+ 852              	.LFE220:
+ 854              	 .section .text.SYSTICK_Init,"ax",%progbits
+ 855              	 .align 2
+ 856              	 .global SYSTICK_Init
+ 857              	 .thumb
+ 858              	 .thumb_func
+ 860              	SYSTICK_Init:
+ 861              	.LFB221:
+ 150:../main.c     **** 
+ 151:../main.c     **** void
+ 152:../main.c     **** SYSTICK_Init()
+ 153:../main.c     **** {
+ 862              	 .loc 3 153 0
+ 863              	 .cfi_startproc
+ 864              	 
+ 865              	 
+ 866 0000 80B5     	 push {r7,lr}
+ 867              	.LCFI34:
+ 868              	 .cfi_def_cfa_offset 8
+ 869              	 .cfi_offset 7,-8
+ 870              	 .cfi_offset 14,-4
+ 871 0002 82B0     	 sub sp,sp,#8
+ 872              	.LCFI35:
+ 873              	 .cfi_def_cfa_offset 16
+ 874 0004 00AF     	 add r7,sp,#0
+ 875              	.LCFI36:
+ 876              	 .cfi_def_cfa_register 7
+ 154:../main.c     **** 	uint32_t Systick_Timer_ID;
+ 155:../main.c     **** 	  // Create software timer - 1ms
+ 156:../main.c     **** 	  Systick_Timer_ID = (uint32_t)SYSTIMER_CreateTimer(SYSTICK_PERIOD_US,SYSTIMER_MODE_PERIODIC,(void
+ 877              	 .loc 3 156 0
+ 878 0006 4FF47A70 	 mov r0,#1000
+ 879 000a 0121     	 movs r1,#1
+ 880 000c 054A     	 ldr r2,.L51
+ 881 000e 0023     	 movs r3,#0
+ 882 0010 FFF7FEFF 	 bl SYSTIMER_CreateTimer
+ 883 0014 7860     	 str r0,[r7,#4]
+ 157:../main.c     **** 	  SYSTIMER_StartTimer(Systick_Timer_ID);
+ 884              	 .loc 3 157 0
+ 885 0016 7868     	 ldr r0,[r7,#4]
+ 886 0018 FFF7FEFF 	 bl SYSTIMER_StartTimer
+ 158:../main.c     **** }
+ 887              	 .loc 3 158 0
+ 888 001c 0837     	 adds r7,r7,#8
+ 889              	.LCFI37:
+ 890              	 .cfi_def_cfa_offset 8
+ 891 001e BD46     	 mov sp,r7
+ 892              	.LCFI38:
+ 893              	 .cfi_def_cfa_register 13
+ 894              	 
+ 895 0020 80BD     	 pop {r7,pc}
+ 896              	.L52:
+ 897 0022 00BF     	 .align 2
+ 898              	.L51:
+ 899 0024 00000000 	 .word SYSTIMER_Irq
+ 900              	 .cfi_endproc
+ 901              	.LFE221:
+ 903              	 .section .text.SYSTIMER_Irq,"ax",%progbits
+ 904              	 .align 2
+ 905              	 .global SYSTIMER_Irq
+ 906              	 .thumb
+ 907              	 .thumb_func
+ 909              	SYSTIMER_Irq:
+ 910              	.LFB222:
+ 159:../main.c     **** 
+ 160:../main.c     **** void SYSTIMER_Irq(void)
+ 161:../main.c     **** {
+ 911              	 .loc 3 161 0
+ 912              	 .cfi_startproc
+ 913              	 
+ 914              	 
+ 915              	 
+ 916 0000 80B4     	 push {r7}
+ 917              	.LCFI39:
+ 918              	 .cfi_def_cfa_offset 4
+ 919              	 .cfi_offset 7,-4
+ 920 0002 00AF     	 add r7,sp,#0
+ 921              	.LCFI40:
+ 922              	 .cfi_def_cfa_register 7
+ 162:../main.c     **** 
+ 163:../main.c     **** }
+ 923              	 .loc 3 163 0
+ 924 0004 BD46     	 mov sp,r7
+ 925              	.LCFI41:
+ 926              	 .cfi_def_cfa_register 13
+ 927              	 
+ 928 0006 5DF8047B 	 ldr r7,[sp],#4
+ 929              	.LCFI42:
+ 930              	 .cfi_restore 7
+ 931              	 .cfi_def_cfa_offset 0
+ 932 000a 7047     	 bx lr
+ 933              	 .cfi_endproc
+ 934              	.LFE222:
+ 936              	 .section .bss.time.8961,"aw",%nobits
+ 937              	 .align 2
+ 940              	time.8961:
+ 941 0000 00000000 	 .space 4
+ 942              	 .text
+ 943              	.Letext0:
+ 944              	 .file 4 "d:\\dave-4.1.2\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 945              	 .file 5 "d:\\dave-4.1.2\\eclipse\\arm-gcc-49\\arm-none-eabi\\include\\stdint.h"
+ 946              	 .file 6 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex/Libraries/CMSIS/Infineon/XMC4500_series/Include/XMC4500.h"
+ 947              	 .file 7 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex\\Libraries\\XMCLib\\inc/xmc4_scu.h"
+ 948              	 .file 8 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex\\Libraries\\XMCLib\\inc/xmc_gpio.h"
+ 949              	 .file 9 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex\\Libraries\\XMCLib\\inc/xmc4_gpio.h"
+ 950              	 .file 10 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex\\Dave\\Generated/GLOBAL_CCU8/global_ccu8.h"
+ 951              	 .file 11 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex\\Dave\\Generated/PWM_CCU8/pwm_ccu8.h"
+ 952              	 .file 12 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex\\Dave\\Generated/SYSTIMER/systimer.h"
+ 953              	 .file 13 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex\\Dave\\Generated/DAVE.h"
+ 954              	 .file 14 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex/Libraries/CMSIS/Infineon/XMC4500_series/Include/system_XMC4500.h"
+ 955              	 .file 15 "D:\\Naukowe\\BLDC_workspace\\PWM_from_ex\\Dave\\Generated/PWM_CCU8/pwm_ccu8_extern.h"
 DEFINED SYMBOLS
                             *ABS*:00000000 main.c
     {standard input}:20     .text.NVIC_EnableIRQ:00000000 $t
@@ -4859,24 +5092,31 @@ DEFINED SYMBOLS
     {standard input}:78     .text.XMC_CCU8_SLICE_EnableEvent:00000000 XMC_CCU8_SLICE_EnableEvent
     {standard input}:125    .text.main:00000000 $t
     {standard input}:130    .text.main:00000000 main
-    {standard input}:660    .text.PWM_set_interrupt:00000000 PWM_set_interrupt
-    {standard input}:534    .text.PWM_set_freq:00000000 PWM_set_freq
+    {standard input}:785    .text.PWM_set_interrupt:00000000 PWM_set_interrupt
+    {standard input}:659    .text.PWM_set_freq:00000000 PWM_set_freq
     {standard input}:180    .text.main:00000038 $d
-    {standard input}:193    .text.ZSM_update:00000000 $t
-    {standard input}:198    .text.ZSM_update:00000000 ZSM_update
-    {standard input}:588    .text.PWM_set_duty:00000000 PWM_set_duty
-    {standard input}:517    .text.ZSM_update:000002c0 $d
-    {standard input}:733    .bss.time.8451:00000000 time.8451
-    {standard input}:529    .text.PWM_set_freq:00000000 $t
-    {standard input}:576    .text.PWM_set_freq:00000028 $d
-    {standard input}:583    .text.PWM_set_duty:00000000 $t
-    {standard input}:647    .text.PWM_set_duty:00000068 $d
-    {standard input}:655    .text.PWM_set_interrupt:00000000 $t
-    {standard input}:691    .text.PWM_set_interrupt:00000020 $d
-    {standard input}:696    .text.CCU80_0_IRQHandler:00000000 $t
-    {standard input}:701    .text.CCU80_0_IRQHandler:00000000 CCU80_0_IRQHandler
-    {standard input}:725    .text.CCU80_0_IRQHandler:00000014 $d
-    {standard input}:730    .bss.time.8451:00000000 $d
+    {standard input}:194    .text.ZSM_update:00000000 $t
+    {standard input}:199    .text.ZSM_update:00000000 ZSM_update
+    {standard input}:545    .text.ZSM_update:00000320 $d
+    {standard input}:940    .bss.time.8961:00000000 time.8961
+    {standard input}:555    .text.ZSM_update:00000340 $t
+    {standard input}:713    .text.PWM_set_duty:00000000 PWM_set_duty
+    {standard input}:646    .text.ZSM_update:00000410 $d
+    {standard input}:654    .text.PWM_set_freq:00000000 $t
+    {standard input}:701    .text.PWM_set_freq:00000028 $d
+    {standard input}:708    .text.PWM_set_duty:00000000 $t
+    {standard input}:772    .text.PWM_set_duty:00000068 $d
+    {standard input}:780    .text.PWM_set_interrupt:00000000 $t
+    {standard input}:816    .text.PWM_set_interrupt:00000020 $d
+    {standard input}:821    .text.CCU80_0_IRQHandler:00000000 $t
+    {standard input}:826    .text.CCU80_0_IRQHandler:00000000 CCU80_0_IRQHandler
+    {standard input}:850    .text.CCU80_0_IRQHandler:00000014 $d
+    {standard input}:855    .text.SYSTICK_Init:00000000 $t
+    {standard input}:860    .text.SYSTICK_Init:00000000 SYSTICK_Init
+    {standard input}:899    .text.SYSTICK_Init:00000024 $d
+    {standard input}:909    .text.SYSTIMER_Irq:00000000 SYSTIMER_Irq
+    {standard input}:904    .text.SYSTIMER_Irq:00000000 $t
+    {standard input}:937    .bss.time.8961:00000000 $d
                      .debug_frame:00000010 $d
 
 UNDEFINED SYMBOLS
@@ -4890,8 +5130,11 @@ __aeabi_ui2d
 __aeabi_dmul
 __aeabi_dadd
 __aeabi_d2f
+__aeabi_ddiv
 __aeabi_dsub
 sinf
 PWM_CCU8_SetFreqSymmetric
 PWM_CCU8_SetDutyCycleSymmetric
 XMC_CCU8_SLICE_SetInterruptNode
+SYSTIMER_CreateTimer
+SYSTIMER_StartTimer
